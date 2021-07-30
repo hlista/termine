@@ -1,18 +1,13 @@
 # Termine
 
-To start your Phoenix server:
+Text, resource collection, node based mmo with an emphasize on story telling and collaboration
 
-  * Install dependencies with `mix deps.get`
-  * Start Phoenix endpoint with `mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+Node System:
+	* Nodes will have a unique identification hash along with a title describing the location
+	* Players will be able to visit the node by typing "goto <hash #>"
+	* Nodes will have an inspect text that describes what is currently happening at the node
+	* Nodes will be handing out a resource that players can send their miners in to mine
+	* Once a node runs out of a resource it progresses to the next plot point and inspect text changes
+	* Nodes have neighbors that players can get a list of and visit
+	* Once you know the hash of a node you can goto it from any node on the map
+ 
