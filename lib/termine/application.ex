@@ -11,6 +11,7 @@ defmodule Termine.Application do
       TermineWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: Termine.PubSub},
+      Termine.Repo,
       # Start the Endpoint (http/https)
       TermineWeb.Endpoint
       # Start a worker by calling: Termine.Worker.start_link(arg)

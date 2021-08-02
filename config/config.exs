@@ -7,6 +7,15 @@
 # General application configuration
 use Mix.Config
 
+config :termine, Termine.Repo,
+  database: "termine_repo",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost"
+
+config :termine,
+  ecto_repos: [Termine.Repo]
+
 # Configures the endpoint
 config :termine, TermineWeb.Endpoint,
   url: [host: "localhost"],
