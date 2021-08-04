@@ -7,7 +7,7 @@ defmodule Termine.World.State do
     field :inspect_text, :string
     field :resource_amount, :integer
     field :type, :string
-    field :next_state, :id
+    belongs_to :next_state, Termine.World.State
 
     timestamps()
   end

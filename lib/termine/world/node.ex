@@ -5,8 +5,8 @@ defmodule Termine.World.Node do
   schema "nodes" do
     field :hash, :string
     field :title, :string
-    field :current_state, :id
-    
+    belongs_to :current_state, Termine.World.State
+
     timestamps()
   end
 
