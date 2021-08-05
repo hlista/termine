@@ -41,7 +41,8 @@ defmodule Termine.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:bcrypt_elixir, "~> 2.3.0"}
     ]
   end
 
