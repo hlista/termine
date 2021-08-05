@@ -6,7 +6,6 @@ defmodule Termine.Repo.Migrations.CreateNodes do
       add :title, :string
       add :hash, :string
 
-      timestamps()
     end
 
     create unique_index(:nodes, [:hash])

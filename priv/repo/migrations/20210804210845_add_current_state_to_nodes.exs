@@ -3,7 +3,7 @@ defmodule Termine.Repo.Migrations.AddCurrentStateToNodes do
 
   def change do
     alter table("nodes") do
-      add :current_state, references(:states, on_delete: :nothing)
+      add :current_state_id, references(:states, on_delete: :nothing)
     end
   end
 end

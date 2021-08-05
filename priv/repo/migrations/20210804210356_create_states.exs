@@ -7,11 +7,10 @@ defmodule Termine.Repo.Migrations.CreateStates do
       add :history_text, :text
       add :type, :string
       add :resource_amount, :integer
-      add :next_state, references(:states, on_delete: :nothing)
+      add :next_state_id, references(:states, on_delete: :nothing)
 
-      timestamps()
     end
 
-    create index(:states, [:next_state])
+    create index(:states, [:next_state_id])
   end
 end

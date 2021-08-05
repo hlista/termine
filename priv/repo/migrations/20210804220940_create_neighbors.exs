@@ -3,13 +3,11 @@ defmodule Termine.Repo.Migrations.CreateNeighbors do
 
   def change do
     create table(:neighbors) do
-      add :left_node, references(:nodes, on_delete: :nothing)
-      add :right_node, references(:nodes, on_delete: :nothing)
+      add :parent_node_id, references(:nodes, on_delete: :nothing)
+      add :child_node_id, references(:nodes, on_delete: :nothing)
 
-      timestamps()
     end
 
-    create index(:neighbors, [:left_node])
-    create index(:neighbors, [:right_node])
+    create unique_index(:neighbors, [:parent_node_id, :child_node_id])
   end
 end

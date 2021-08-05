@@ -9,13 +9,14 @@ defmodule Termine.World.State do
     field :type, :string
     belongs_to :next_state, Termine.World.State
 
-    timestamps()
   end
+
+  @available_fields [:inspect_text, :history_text, :type, :resource_amount]
 
   @doc false
   def changeset(state, attrs) do
     state
-    |> cast(attrs, [:inspect_text, :history_text, :type, :resource_amount])
-    |> validate_required([:inspect_text, :history_text, :type, :resource_amount])
+    |> cast(attrs, @available_fields)
+    |> validate_required(@available_fields)
   end
 end
