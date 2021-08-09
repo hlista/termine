@@ -5,7 +5,10 @@ defmodule Termine.World.State do
   schema "states" do
     field :history_text, :string
     field :inspect_text, :string
+
+    belongs_to :resource, Termine.World.Resource
     field :resource_amount, :integer
+    
     field :type, :string
     belongs_to :next_state, Termine.World.State
 
