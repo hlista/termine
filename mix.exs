@@ -42,7 +42,8 @@ defmodule Termine.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
-      {:bcrypt_elixir, "~> 2.3.0"}
+      {:bcrypt_elixir, "~> 2.3.0"},
+      {:phx_gen_auth, "~> 0.7.0"}
     ]
   end
 

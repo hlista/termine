@@ -4,6 +4,8 @@ defmodule Termine.Character.Player do
 
   schema "players" do
     belongs_to :user, Termine.Account.User
+    has_many :inventory_items, Termine.Character.InventoryItem
+    has_many :miners, Termine.Character.Miner
 
   end
 

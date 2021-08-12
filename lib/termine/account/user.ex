@@ -6,6 +6,7 @@ defmodule Termine.Account.User do
     field :email, :string
     field :password_hash, :string
     field :username, :string
+    has_one :player, Termine.Character.Player
 
   end
 
