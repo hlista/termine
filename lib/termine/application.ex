@@ -7,11 +7,12 @@ defmodule Termine.Application do
 
   def start(_type, _args) do
     children = [
+      # Start the Ecto repository
+      Termine.Repo,
       # Start the Telemetry supervisor
       TermineWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: Termine.PubSub},
-      Termine.Repo,
       # Start the Endpoint (http/https)
       TermineWeb.Endpoint
       # Start a worker by calling: Termine.Worker.start_link(arg)

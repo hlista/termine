@@ -7,7 +7,7 @@ defmodule TermineWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_termine_key",
-    signing_salt: "KUUifTo9"
+    signing_salt: "Jgmjsp7w"
   ]
 
   socket "/socket", TermineWeb.UserSocket,
@@ -29,7 +29,10 @@ defmodule TermineWeb.Endpoint do
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
+    plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :termine
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,

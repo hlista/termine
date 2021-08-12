@@ -7,22 +7,16 @@
 # General application configuration
 use Mix.Config
 
-config :termine, Termine.Repo,
-  database: "termine_repo",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost"
-
 config :termine,
   ecto_repos: [Termine.Repo]
 
 # Configures the endpoint
 config :termine, TermineWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "doK47yZuS2AvkFUAkpGV4v/y7kDmn4gUuGLZem6RVzXHKFjtTXMa2ebXUbGh6AcW",
-  render_errors: [view: TermineWeb.ErrorView, accepts: ~w(json), layout: false],
+  secret_key_base: "jGtYshQWSyTMSHFLAv81ZzxDY3TUdswv3+709o9Is2f4SGGuq4oGg9dpyCZjRgom",
+  render_errors: [view: TermineWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Termine.PubSub,
-  live_view: [signing_salt: "5xbcprTz"]
+  live_view: [signing_salt: "qxeTXsMi"]
 
 # Configures Elixir's Logger
 config :logger, :console,

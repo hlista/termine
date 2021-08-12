@@ -1,13 +1,28 @@
 defmodule TermineWeb.Router do
   use TermineWeb, :router
 
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
-  scope "/api", TermineWeb do
-    pipe_through :api
+  scope "/", TermineWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
   end
+
+  # Other scopes may use custom stacks.
+  # scope "/api", TermineWeb do
+  #   pipe_through :api
+  # end
 
   # Enables LiveDashboard only for development
   #
@@ -20,7 +35,7 @@ defmodule TermineWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through [:fetch_session, :protect_from_forgery]
+      pipe_through :browser
       live_dashboard "/dashboard", metrics: TermineWeb.Telemetry
     end
   end
