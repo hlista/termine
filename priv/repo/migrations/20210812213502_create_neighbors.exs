@@ -8,6 +8,7 @@ defmodule Termine.Repo.Migrations.CreateNeighbors do
 
     end
 
-    create unique_index(:neighbors, [:parent_node_id, :child_node_id])
+    create index(:neighbors, [:parent_node_id])
+    create index(:neighbors, [:child_node_id])
   end
 end

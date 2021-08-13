@@ -1,11 +1,9 @@
-defmodule Termine.Character.Player do
+defmodule Termine.Characters.Player do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "players" do
-    belongs_to :user, Termine.Account.User
-    has_many :inventory_items, Termine.Character.InventoryItem
-    has_many :miners, Termine.Character.Miner
+    belongs_to :user, Termine.Accounts.User
 
   end
 

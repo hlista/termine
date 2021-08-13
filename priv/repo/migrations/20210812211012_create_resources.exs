@@ -7,5 +7,6 @@ defmodule Termine.Repo.Migrations.CreateResources do
 
     end
 
+    create unique_index(:resources, [:name])
   end
 end

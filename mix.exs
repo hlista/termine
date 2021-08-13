@@ -46,7 +46,6 @@ defmodule Termine.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:bcrypt_elixir, "~> 2.3.0"},
       {:phx_gen_auth, "~> 0.7.0"}
     ]
   end

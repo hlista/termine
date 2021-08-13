@@ -1,10 +1,10 @@
-defmodule Termine.World.Neighbor do
+defmodule Termine.Worlds.Neighbor do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "neighbors" do
-    belongs_to :parent_node, Termine.World.Node
-    belongs_to :child_node, Termine.World.Node
+    belongs_to :parent_node, Termine.Worlds.Node
+    belongs_to :child_node, Termine.Worlds.Node
 
   end
 
@@ -13,7 +13,5 @@ defmodule Termine.World.Neighbor do
     neighbor
     |> cast(attrs, [])
     |> validate_required([])
-    |> unique_constraint([:parent_node_id, :child_node_id])
   end
-
 end
