@@ -10,7 +10,7 @@ defmodule Termine.Worlds.State do
     field :resource_amount, :integer
     belongs_to :resource, Termine.Items.Resource
     belongs_to :next_state, Termine.Worlds.State
-    belongs_to :node_id, Termine.Worlds.Node
+    belongs_to :node, Termine.Worlds.Node
 
   end
 

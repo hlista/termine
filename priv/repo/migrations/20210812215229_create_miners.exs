@@ -7,6 +7,7 @@ defmodule Termine.Repo.Migrations.CreateMiners do
       add :combat_level, :integer
       add :gather_level, :integer
       add :player_id, references(:players, on_delete: :nothing)
+      add :location_id, references(:nodes, on_delete: :nothing)
 
     end
 
