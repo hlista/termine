@@ -7,7 +7,7 @@ defmodule Termine.Characters.Miner do
     field :gather_level, :integer
     field :name, :string
     belongs_to :player, Termine.Characters.Player
-
+    belongs_to :location, Termine.Worlds.Node
   end
 
   @doc false

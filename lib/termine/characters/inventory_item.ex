@@ -3,10 +3,9 @@ defmodule Termine.Characters.InventoryItem do
   import Ecto.Changeset
 
   schema "inventory_items" do
-    belongs_to :inventory_id, Termine.Characters.Inventory
-    belongs_to :resource_id, Termine.Items.Resource
+    belongs_to :inventory, Termine.Characters.Inventory
+    belongs_to :resource, Termine.Items.Resource
 
-    timestamps()
   end
 
   @doc false

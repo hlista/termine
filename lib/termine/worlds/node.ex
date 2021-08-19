@@ -8,6 +8,8 @@ defmodule Termine.Worlds.Node do
     has_one :current_state, Termine.Worlds.State
     has_many :neighbors, Termine.Worlds.Neighbor, foreign_key: :parent_node_id
     has_many :neighbor_nodes, through: [:neighbors, :child_node]
+    has_many :players, Termine.Characters.Player, foreign_key: :location_id
+    has_many :miners, Termine.Characters.Miner, foreign_key: :location_id
 
   end
 

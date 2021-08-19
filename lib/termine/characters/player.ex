@@ -4,7 +4,8 @@ defmodule Termine.Characters.Player do
 
   schema "players" do
     belongs_to :user, Termine.Accounts.User
-
+    belongs_to :location, Termine.Worlds.Node
+    has_one :inventory, Termine.Characters.Inventory
   end
 
   @doc false
