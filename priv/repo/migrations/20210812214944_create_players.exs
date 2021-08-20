@@ -5,6 +5,7 @@ defmodule Termine.Repo.Migrations.CreatePlayers do
     create table(:players) do
       add :user_id, references(:users, on_delete: :nothing)
       add :location_id, references(:nodes, on_delete: :nothing)
+      add :username, :string
 
     end
 
