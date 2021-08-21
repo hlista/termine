@@ -16,6 +16,18 @@ defmodule TermineWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/" do
+    pipe_through :api
+
+    forward "/graphql", Absinthe.Plug,
+      schema: TermineWeb.Schema
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: TermineWeb.Schema,
+      interface: :playground,
+      socket: TermineWeb.UserSocket
+  end
+
   scope "/", TermineWeb do
     pipe_through :browser
 
