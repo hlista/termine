@@ -7,7 +7,7 @@ defmodule TermineWeb.Schema.Mutations.Player do
 		field :create_player, :player do
 			arg :username, non_null(:string)
 
-			resolve &Resolvers.Player.create/2
+			resolve &Resolvers.Player.create/3
 		end
 	end
 end
