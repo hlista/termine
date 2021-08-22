@@ -10,6 +10,10 @@ use Mix.Config
 config :termine,
   ecto_repos: [Termine.Repo]
 
+config :ecto_shorts,
+  repo: Termine.Repo,
+  error_module: EctoShorts.Actions.Error
+
 # Configures the endpoint
 config :termine, TermineWeb.Endpoint,
   url: [host: "localhost"],

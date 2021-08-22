@@ -10,10 +10,16 @@ defmodule Termine.Characters.Player do
     
   end
 
+  @available_fields [:username]
+
+  def create_changeset(params) do
+    changeset(%Termine.Characters.Player{}, params)
+  end
+
   @doc false
   def changeset(player, attrs) do
     player
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, @available_fields)
+    |> validate_required(@available_fields)
   end
 end
