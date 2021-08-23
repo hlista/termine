@@ -15,11 +15,12 @@ defmodule TermineWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
-    plug Termine.Context
+    plug :fetch_current_user
+    plug Termine.AbsintheUserContext
   end
 
   scope "/" do
-    pipe_through [:api]
+    pipe_through [:api, :require_authenticated_user]
 
     forward "/graphql", Absinthe.Plug,
       schema: TermineWeb.Schema

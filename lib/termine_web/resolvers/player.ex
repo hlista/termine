@@ -3,7 +3,6 @@ defmodule TermineWeb.Resolvers.Player do
 
 	def create(_, params, %{context: %{current_user: current_user}}) do
 		params = Map.put(params, :user_id, current_user.id)
-		IO.inspect params
 		Characters.create_player(params)
 	end
 
