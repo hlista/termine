@@ -6,8 +6,8 @@ defmodule Termine.Worlds.State do
     field :history_text, :string
     field :inspect_text, :string
     field :intro_text, :string
-    field :type, :string
     field :resource_amount, :integer
+    field :type, Ecto.Enum, values: [:mineable, :blocking, :attackable, :donatable]
     belongs_to :resource, Termine.Items.Resource
     belongs_to :next_state, Termine.Worlds.State
     belongs_to :node, Termine.Worlds.Node

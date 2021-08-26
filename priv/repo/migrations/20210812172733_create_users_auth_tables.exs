@@ -3,10 +3,14 @@ defmodule Termine.Repo.Migrations.CreateUsersAuthTables do
 
   def change do
     execute "CREATE EXTENSION IF NOT EXISTS citext", ""
+    create_query = "CREATE TYPE user_role AS ENUM ('admin', 'user')"
+    drop_query = "DROP TYPE user_role"
+    execute(create_query, drop_query)
 
     create table(:users) do
       add :email, :citext, null: false
       add :hashed_password, :string, null: false
+      add :role, :user_role
       add :confirmed_at, :naive_datetime
       timestamps()
     end
