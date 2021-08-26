@@ -32,7 +32,7 @@ defmodule Termine.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :role])
     |> validate_email()
     |> validate_password(opts)
   end

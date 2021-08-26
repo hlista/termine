@@ -74,7 +74,7 @@ defmodule Termine.Accounts do
 
   """
   def register_user(attrs) do
-    %User{}
+    %User{role: :user}
     |> User.registration_changeset(attrs)
     |> Repo.insert()
   end
