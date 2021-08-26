@@ -2,8 +2,10 @@ defmodule TermineWeb.Schema do
 	use Absinthe.Schema
 
 	import_types TermineWeb.Types.Player
+	import_types TermineWeb.Types.Node
 
 	import_types TermineWeb.Schema.Mutations.Player
+	import_types TermineWeb.Schema.Mutations.Node
 
 	import_types TermineWeb.Schema.Queries.Player
 
@@ -13,5 +15,6 @@ defmodule TermineWeb.Schema do
 
 	mutation do
 		import_fields :player_mutations
+		import_fields :node_mutations
 	end
 end

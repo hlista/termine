@@ -13,6 +13,10 @@ defmodule Termine.Worlds.Node do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.Worlds.Node{}, params)
+  end
+
   @doc false
   def changeset(node, attrs) do
     node

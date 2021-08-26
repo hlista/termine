@@ -17,7 +17,7 @@ defmodule Termine.Worlds.State do
   @doc false
   def changeset(state, attrs) do
     state
-    |> cast(attrs, [:history_text, :inspect_text, :intro_text, :type])
-    |> validate_required([:history_text, :inspect_text, :intro_text, :type])
+    |> cast(attrs, [:history_text, :inspect_text, :intro_text, :resource_amount, :type])
+    |> validate_required([:history_text, :inspect_text, :intro_text, :resource_amount, :type])
   end
 end
