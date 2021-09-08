@@ -5,6 +5,7 @@ defmodule Termine.Worlds.Node do
   schema "nodes" do
     field :hash, :string
     field :name, :string
+    field :intro_text, :string
     has_one :current_state, Termine.Worlds.State
     has_many :neighbors, Termine.Worlds.Neighbor, foreign_key: :parent_node_id
     has_many :neighbor_nodes, through: [:neighbors, :child_node]
@@ -20,7 +21,7 @@ defmodule Termine.Worlds.Node do
   @doc false
   def changeset(node, attrs) do
     node
-    |> cast(attrs, [:name, :hash])
+    |> cast(attrs, [:name, :hash, :intro_text])
     |> validate_required([:name, :hash])
     |> unique_constraint(:name)
     |> unique_constraint(:hash)

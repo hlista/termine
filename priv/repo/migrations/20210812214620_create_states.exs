@@ -7,9 +7,8 @@ defmodule Termine.Repo.Migrations.CreateStates do
     execute(create_query, drop_query)
 
     create table(:states) do
-      add :history_text, :string
-      add :inspect_text, :string
-      add :intro_text, :string
+      add :history_text, :text
+      add :inspect_text, :text
       add :type, :state_type
       add :resource_amount, :integer
       add :resource_id, references(:resources, on_delete: :nothing)

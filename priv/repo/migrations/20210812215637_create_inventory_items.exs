@@ -5,6 +5,7 @@ defmodule Termine.Repo.Migrations.CreateInventoryItems do
     create table(:inventory_items) do
       add :inventory_id, references(:inventories, on_delete: :nothing)
       add :resource_id, references(:resources, on_delete: :nothing)
+      add :amount, :integer
 
     end
 

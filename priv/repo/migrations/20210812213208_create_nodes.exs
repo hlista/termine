@@ -5,7 +5,8 @@ defmodule Termine.Repo.Migrations.CreateNodes do
     create table(:nodes) do
       add :name, :string
       add :hash, :string
-
+      add :intro_text, :text
+      
     end
 
     create unique_index(:nodes, [:name])
