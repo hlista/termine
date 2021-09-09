@@ -13,6 +13,10 @@ defmodule Termine.Worlds.State do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.Worlds.State{}, params)
+  end
+
   @doc false
   def changeset(state, attrs) do
     state

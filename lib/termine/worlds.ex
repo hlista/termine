@@ -6,4 +6,8 @@ defmodule Termine.Worlds do
 	def create_node(params) do
 		Actions.create(Node, params)
 	end
+
+	def create_state(params) do
+		Actions.create(State, params)
+	end
 end
