@@ -10,4 +10,8 @@ defmodule Termine.Worlds do
 	def create_state(params) do
 		Actions.create(State, params)
 	end
+
+	def update_state(id, params) do
+		Actions.update(State, id, params)
+	end
 end
