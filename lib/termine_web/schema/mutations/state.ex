@@ -9,7 +9,8 @@ defmodule TermineWeb.Schema.Mutations.State do
 			arg :inspect_text, non_null(:string)
 			arg :resource_amount, non_null(:integer)
 			arg :type, non_null(:state_type)
-			middleware TermineWeb.AdminAuthentication
+			arg :next_state_id, :id
+			#middleware TermineWeb.AdminAuthentication
 			resolve &Resolvers.State.create/3
 		end
 	end

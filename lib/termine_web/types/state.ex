@@ -8,5 +8,6 @@ defmodule TermineWeb.Types.State do
 		field :inspect_text, :string
     	field :resource_amount, :integer
     	field :type, :state_type
+    	field :next_state_id, :id
 	end
 end
