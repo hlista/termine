@@ -21,8 +21,8 @@ defmodule Termine.Worlds.Node do
   @doc false
   def changeset(node, attrs) do
     node
-    |> cast(attrs, [:name, :hash, :intro_text])
-    |> validate_required([:name, :hash, :intro_texts])
+    |> cast(attrs, [:name, :hash, :intro_text, :state_id])
+    |> validate_required([:name, :hash, :intro_text])
     |> unique_constraint(:name)
     |> unique_constraint(:hash)
   end
