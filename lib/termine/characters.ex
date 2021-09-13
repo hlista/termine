@@ -18,6 +18,10 @@ defmodule Termine.Characters do
 		Actions.find(Player, params)
 	end
 
+	def preload_player_into_user(user) do
+		Repo.preload(user, :player)
+	end
+
 	defp create_inventory(player_id) do
 		changeset = Inventory.changeset(%Inventory{player_id: player_id}, %{})
 		Repo.insert changeset

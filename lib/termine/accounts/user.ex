@@ -9,7 +9,8 @@ defmodule Termine.Accounts.User do
     field :hashed_password, :string
     field :role, Ecto.Enum, values: [:admin, :user]
     field :confirmed_at, :naive_datetime
-
+    has_one :player, Termine.Characters.Player
+    
     timestamps()
   end
 

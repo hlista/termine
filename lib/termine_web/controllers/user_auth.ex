@@ -3,6 +3,7 @@ defmodule TermineWeb.UserAuth do
   import Phoenix.Controller
 
   alias Termine.Accounts
+  alias Termine.Characters
   alias TermineWeb.Router.Helpers, as: Routes
 
   # Make the remember me cookie valid for 60 days.
@@ -91,6 +92,7 @@ defmodule TermineWeb.UserAuth do
   def fetch_current_user(conn, _opts) do
     {user_token, conn} = ensure_user_token(conn)
     user = user_token && Accounts.get_user_by_session_token(user_token)
+    user = Characters.preload_player_into_user(user)
     assign(conn, :current_user, user)
   end
 
