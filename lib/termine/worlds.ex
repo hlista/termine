@@ -7,6 +7,10 @@ defmodule Termine.Worlds do
 		Actions.create(Node, params)
 	end
 
+	def update_node(id, params) do
+		Actions.update(Node, id, params)
+	end
+
 	def create_state(params) do
 		Actions.create(State, params)
 	end
@@ -14,4 +18,5 @@ defmodule Termine.Worlds do
 	def update_state(id, params) do
 		Actions.update(State, id, params)
 	end
+
 end

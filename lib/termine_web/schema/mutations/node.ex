@@ -11,5 +11,14 @@ defmodule TermineWeb.Schema.Mutations.Node do
 			#middleware TermineWeb.AdminAuthentication
 			resolve &Resolvers.Node.create/3
 		end
+
+		field :update_node, :node do
+			arg :id, non_null(:id)
+			arg :intro_text, :string
+			arg :name, :string
+			arg :state_id, :id
+			#middleware TermineWeb.AdminAuthentication
+			resolve &Resolvers.Node.update/3
+		end
 	end
 end

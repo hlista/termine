@@ -2,15 +2,24 @@ defmodule TermineWeb.Resolvers.Node do
 	alias Termine.Worlds
 
 	def create(_, params, _) do
-		params = case params do
-			%{state_id: id} -> %{params | state_id: String.to_integer(id)}
-			_ -> params
-		end
-		Map.put(params, :hash, generate_hash())
+		ids_to_integer(params)
+		|> Map.put(:hash, generate_hash())
 		|> Worlds.create_node()
+	end
+
+	def update(_, %{id: id} = params, _) do
+		params = ids_to_integer(params)
+		id = String.to_integer(id)
+		Worlds.update_node(id, Map.delete(params, :id))
 	end
 
 	defp generate_hash() do
 		for _ <- 1..6, into: "", do: <<Enum.random('0123456789abcdef')>>
+	end
+
+	defp ids_to_integer(params) do
+		params
+		|> Map.take([:state_id])
+		|> Enum.reduce(params, fn {key, value}, acc -> Map.put(acc, key, String.to_integer(value)) end)
 	end
 end
