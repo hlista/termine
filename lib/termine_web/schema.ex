@@ -8,6 +8,7 @@ defmodule TermineWeb.Schema do
 	import_types TermineWeb.Schema.Mutations.Player
 	import_types TermineWeb.Schema.Mutations.Node
 	import_types TermineWeb.Schema.Mutations.State
+	import_types TermineWeb.Schema.Mutations.Neighbor
 
 	import_types TermineWeb.Schema.Queries.Player
 
@@ -19,5 +20,6 @@ defmodule TermineWeb.Schema do
 		import_fields :player_mutations
 		import_fields :node_mutations
 		import_fields :state_mutations
+		import_fields :neighbor_mutations
 	end
 end

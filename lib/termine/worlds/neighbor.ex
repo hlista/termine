@@ -8,10 +8,14 @@ defmodule Termine.Worlds.Neighbor do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.Worlds.Neighbor{}, params)
+  end
+
   @doc false
   def changeset(neighbor, attrs) do
     neighbor
-    |> cast(attrs, [])
+    |> cast(attrs, [:parent_node_id, :child_node_id])
     |> validate_required([])
   end
 end

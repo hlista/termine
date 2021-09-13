@@ -19,4 +19,7 @@ defmodule Termine.Worlds do
 		Actions.update(State, id, params)
 	end
 
+	def create_neighbor(params) do
+		Actions.create(Neighbor, params)
+	end
 end
