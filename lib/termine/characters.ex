@@ -3,15 +3,24 @@ defmodule Termine.Characters do
 	alias Termine.Characters.{Player, Miner, Inventory, InventoryItem}
 	alias EctoShorts.Actions
 
-	def create_player(%{user_id: user_id, username: username}) do
-		changeset = Player.changeset(%Player{user_id: user_id}, %{username: username})
-		case Repo.insert changeset do
-			{:ok, player} ->
-				create_inventory(player.id)
-				{:ok, player}
+	def create_player(params) do
+		Actions.create(Player, params)
+
+	end
+
+	def create_inventory(params) do
+		Actions.create(Inventory, params)
+	end
+
+	def move_player(%{hash: hash, player: player}) do
+		player = Repo.preload(player, [location: [:neighbor_nodes]])
+		case move_is_valid?(player, hash) do
+			{true, node} ->
+				Actions.update(Player, player.id, %{location_id: node.id})
 			_ ->
-				{:error, "Cannot create Player"}
+				{:error, "Cannot travel to that node"}
 		end
+
 	end
 
 	def find_player(params) do
@@ -22,8 +31,15 @@ defmodule Termine.Characters do
 		Repo.preload(user, :player)
 	end
 
-	defp create_inventory(player_id) do
-		changeset = Inventory.changeset(%Inventory{player_id: player_id}, %{})
-		Repo.insert changeset
+	defp move_is_valid?(player, hash) do
+		Enum.reduce(player.location.neighbor_nodes, {false, nil}, 
+			fn node, acc-> 
+				if node.hash === hash do
+					{true, node}
+				else
+					acc
+				end
+			end)
 	end
+
 end

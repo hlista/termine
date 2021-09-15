@@ -9,5 +9,11 @@ defmodule TermineWeb.Schema.Mutations.Player do
 
 			resolve &Resolvers.Player.create/3
 		end
+
+		field :move_player, :player do
+			arg :hash, non_null(:string)
+
+			resolve &Resolvers.Player.move/3
+		end
 	end
 end

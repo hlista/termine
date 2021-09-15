@@ -7,10 +7,14 @@ defmodule Termine.Characters.Inventory do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.Characters.Inventory{}, params)
+  end
+
   @doc false
   def changeset(inventory, attrs) do
     inventory
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:player_id])
+    |> validate_required([:player_id])
   end
 end
