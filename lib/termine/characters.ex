@@ -1,6 +1,6 @@
 defmodule Termine.Characters do
 	alias Termine.Repo
-	alias Termine.Characters.{Player, Miner, Inventory, InventoryItem}
+	alias Termine.Characters.{Player, Miner, Inventory, InventoryItem, NodeHistory}
 	alias EctoShorts.Actions
 
 	def create_player(params) do
@@ -12,13 +12,19 @@ defmodule Termine.Characters do
 		Actions.create(Inventory, params)
 	end
 
+	def create_node_history(params) do
+		Actions.create(NodeHistory, params)
+	end
+
 	def move_player(%{hash: hash, user: user}) do
-		user = Repo.preload(user, [player: [location: [:neighbor_nodes]]])
-		case move_is_valid?(user.player, hash) do
-			{true, node} ->
-				Actions.update(Player, user.player.id, %{location_id: node.id})
-			_ ->
+		user = Repo.preload(user, [player: [location: [:neighbor_nodes], history_nodes: []]])
+		valid_nodes = user.player.location.neighbor_nodes ++ user.player.history_nodes
+		case find_valid_node(hash, valid_nodes) do
+			nil ->
 				{:error, "Cannot travel to that node"}
+			node ->
+				create_node_history(%{player_id: user.player.id, node_id: node.id})
+				Actions.update(Player, user.player.id, %{location_id: node.id})
 		end
 
 	end
@@ -27,15 +33,8 @@ defmodule Termine.Characters do
 		Actions.find(Player, params)
 	end
 
-	defp move_is_valid?(player, hash) do
-		Enum.reduce(player.location.neighbor_nodes, {false, nil}, 
-			fn node, acc-> 
-				if node.hash === hash do
-					{true, node}
-				else
-					acc
-				end
-			end)
+	defp find_valid_node(hash, nodes) do
+		Enum.find(nodes, fn x -> x.hash === hash end)
 	end
 
 end

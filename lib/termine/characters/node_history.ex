@@ -8,6 +8,10 @@ defmodule Termine.Characters.NodeHistory do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.Characters.NodeHistory{}, params)
+  end
+
   @doc false
   def changeset(node_history, attrs) do
     node_history
