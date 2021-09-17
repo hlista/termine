@@ -1,15 +1,15 @@
-defmodule Termine.Characters.NodeHistory do
+defmodule Termine.Characters.PlayerNodeHistory do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "node_histories" do
+  schema "player_node_histories" do
     belongs_to :node, Termine.Worlds.Node
     belongs_to :player, Termine.Characters.Player
 
   end
 
   def create_changeset(params) do
-    changeset(%Termine.Characters.NodeHistory{}, params)
+    changeset(%Termine.Characters.PlayerNodeHistory{}, params)
   end
 
   @doc false

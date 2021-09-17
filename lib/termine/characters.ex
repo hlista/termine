@@ -1,6 +1,6 @@
 defmodule Termine.Characters do
 	alias Termine.Repo
-	alias Termine.Characters.{Player, Miner, Inventory, InventoryItem, NodeHistory}
+	alias Termine.Characters.{Player, Miner, Inventory, InventoryItem, PlayerNodeHistory}
 	alias EctoShorts.Actions
 
 	def create_player(params) do
@@ -13,7 +13,7 @@ defmodule Termine.Characters do
 	end
 
 	def create_node_history(params) do
-		Actions.create(NodeHistory, params)
+		Actions.create(PlayerNodeHistory, params)
 	end
 
 	def move_player(%{hash: hash, user: user}) do
