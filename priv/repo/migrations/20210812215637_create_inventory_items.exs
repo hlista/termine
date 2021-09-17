@@ -11,5 +11,6 @@ defmodule Termine.Repo.Migrations.CreateInventoryItems do
 
     create index(:inventory_items, [:inventory_id])
     create index(:inventory_items, [:resource_id])
+    create unique_index(:inventory_items, [:inventory_id, :resource_id])
   end
 end

@@ -17,5 +17,7 @@ defmodule Termine.Worlds.Neighbor do
     neighbor
     |> cast(attrs, [:parent_node_id, :child_node_id])
     |> validate_required([])
+    |> unique_constraint([:parent_node_id, :child_node_id])
+    |> unique_constraint([:child_node_id, :parent_node_id])
   end
 end

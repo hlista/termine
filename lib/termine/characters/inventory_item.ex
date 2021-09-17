@@ -14,5 +14,6 @@ defmodule Termine.Characters.InventoryItem do
     inventory_item
     |> cast(attrs, [:amount])
     |> validate_required([])
+    |> unique_constraint([:inventory_id, :resource_id])
   end
 end
