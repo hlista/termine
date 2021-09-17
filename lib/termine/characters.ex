@@ -12,11 +12,11 @@ defmodule Termine.Characters do
 		Actions.create(Inventory, params)
 	end
 
-	def move_player(%{hash: hash, player: player}) do
-		player = Repo.preload(player, [location: [:neighbor_nodes]])
-		case move_is_valid?(player, hash) do
+	def move_player(%{hash: hash, user: user}) do
+		user = Repo.preload(user, [player: [location: [:neighbor_nodes]]])
+		case move_is_valid?(user.player, hash) do
 			{true, node} ->
-				Actions.update(Player, player.id, %{location_id: node.id})
+				Actions.update(Player, user.player.id, %{location_id: node.id})
 			_ ->
 				{:error, "Cannot travel to that node"}
 		end
@@ -25,10 +25,6 @@ defmodule Termine.Characters do
 
 	def find_player(params) do
 		Actions.find(Player, params)
-	end
-
-	def preload_player_into_user(user) do
-		Repo.preload(user, :player)
 	end
 
 	defp move_is_valid?(player, hash) do

@@ -14,9 +14,9 @@ defmodule TermineWeb.Resolvers.Player do
 		end
 	end
 
-	def move(_, params, %{context: %{current_user: %{player: player}}}) do
+	def move(_, params, %{context: %{current_user: user}}) do
 		params
-		|> Map.put(:player, player)
+		|> Map.put(:user, user)
 		|> Characters.move_player()
 	end
 
