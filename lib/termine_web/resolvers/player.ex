@@ -1,7 +1,7 @@
 defmodule TermineWeb.Resolvers.Player do
 	alias Termine.Characters
 
-	def create(_, params, %{context: %{current_user: current_user}}) do
+	def create(params, %{context: %{current_user: current_user}}) do
 		created_player = params
 		|> Map.put(:user_id, current_user.id)
 		|> Characters.create_player()
@@ -14,7 +14,7 @@ defmodule TermineWeb.Resolvers.Player do
 		end
 	end
 
-	def move(_, params, %{context: %{current_user: user}}) do
+	def move(params, %{context: %{current_user: user}}) do
 		params
 		|> Map.put(:user, user)
 		|> Characters.move_player()

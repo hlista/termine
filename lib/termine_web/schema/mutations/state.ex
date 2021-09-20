@@ -12,7 +12,7 @@ defmodule TermineWeb.Schema.Mutations.State do
 			arg :next_state_id, :id
 			arg :resource_id, :id
 			#middleware TermineWeb.AdminAuthentication
-			resolve &Resolvers.State.create/3
+			resolve &Resolvers.State.create/2
 		end
 
 		field :update_state, :state do
@@ -24,7 +24,7 @@ defmodule TermineWeb.Schema.Mutations.State do
 			arg :next_state_id, :id
 			arg :resource_id, :id
 			#middleware TermineWeb.AdminAuthentication
-			resolve &Resolvers.State.update/3
+			resolve &Resolvers.State.update/2
 		end
 	end
 end

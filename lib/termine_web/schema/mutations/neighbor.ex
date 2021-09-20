@@ -8,7 +8,7 @@ defmodule TermineWeb.Schema.Mutations.Neighbor do
 			arg :node_one_id, non_null(:id)
 			arg :node_two_id, non_null(:id)
 			#middleware TermineWeb.AdminAuthentication
-			resolve &Resolvers.Neighbor.create/3
+			resolve &Resolvers.Neighbor.create/2
 		end
 	end
 end

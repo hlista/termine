@@ -9,7 +9,7 @@ defmodule TermineWeb.Schema.Mutations.Node do
 			arg :intro_text, non_null(:string)
 			arg :state_id, :id
 			#middleware TermineWeb.AdminAuthentication
-			resolve &Resolvers.Node.create/3
+			resolve &Resolvers.Node.create/2
 		end
 
 		field :update_node, :node do
@@ -18,7 +18,7 @@ defmodule TermineWeb.Schema.Mutations.Node do
 			arg :name, :string
 			arg :state_id, :id
 			#middleware TermineWeb.AdminAuthentication
-			resolve &Resolvers.Node.update/3
+			resolve &Resolvers.Node.update/2
 		end
 	end
 end

@@ -1,13 +1,13 @@
 defmodule TermineWeb.Resolvers.Node do
 	alias Termine.Worlds
 
-	def create(_, params, _) do
+	def create(params, _) do
 		ids_to_integer(params)
 		|> Map.put(:hash, generate_hash())
 		|> Worlds.create_node()
 	end
 
-	def update(_, %{id: id} = params, _) do
+	def update(%{id: id} = params, _) do
 		params = ids_to_integer(params)
 		id = String.to_integer(id)
 		Worlds.update_node(id, Map.delete(params, :id))
