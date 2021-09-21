@@ -1,6 +1,8 @@
 defmodule TermineWeb.Resolvers.Node do
 	alias Termine.Worlds
 
+	def all(params, _), do: Worlds.list_nodes(params)
+
 	def create(params, _) do
 		ids_to_integer(params)
 		|> Map.put(:hash, generate_hash())

@@ -3,9 +3,12 @@ defmodule Termine.Characters do
 	alias Termine.Characters.{Player, Miner, Inventory, InventoryItem, PlayerNodeHistory}
 	alias EctoShorts.Actions
 
+	def list_players(params) do
+		{:ok, Actions.all(Player, params)}
+	end
+
 	def create_player(params) do
 		Actions.create(Player, params)
-
 	end
 
 	def create_inventory(params) do

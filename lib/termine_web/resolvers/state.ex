@@ -1,6 +1,8 @@
 defmodule TermineWeb.Resolvers.State do
 	alias Termine.Worlds
 
+	def all(params, _), do: Worlds.list_states(params)
+
 	def create(params, _) do
 		params = ids_to_integer(params)
 

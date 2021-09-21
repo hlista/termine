@@ -11,9 +11,13 @@ defmodule TermineWeb.Schema do
 	import_types TermineWeb.Schema.Mutations.Neighbor
 
 	import_types TermineWeb.Schema.Queries.Player
+	import_types TermineWeb.Schema.Queries.Node
+	import_types TermineWeb.Schema.Queries.State
 
 	query do
 		import_fields :player_queries
+		import_fields :node_queries
+		import_fields :state_queries
 	end
 
 	mutation do

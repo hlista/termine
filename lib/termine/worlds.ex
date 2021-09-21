@@ -3,6 +3,14 @@ defmodule Termine.Worlds do
 	alias Termine.Worlds.{Node, State, Neighbor}
 	alias EctoShorts.Actions
 
+	def list_nodes(params) do
+		{:ok, Actions.all(Node, params)}
+	end
+
+	def list_states(params) do
+		{:ok, Actions.all(State, params)}
+	end
+
 	def create_node(params) do
 		Actions.create(Node, params)
 	end
