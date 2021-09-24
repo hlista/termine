@@ -9,7 +9,7 @@ defmodule TermineWeb.Schema.Mutations.State do
 			arg :inspect_text, non_null(:string)
 			arg :resource_amount, non_null(:integer)
 			arg :type, non_null(:state_type)
-			arg :next_state_id, :id
+			arg :node_id, non_null(:id)
 			arg :resource_id, :id
 			#middleware TermineWeb.AdminAuthentication
 			resolve &Resolvers.State.create/2
@@ -21,7 +21,7 @@ defmodule TermineWeb.Schema.Mutations.State do
 			arg :inspect_text, :string
 			arg :resource_amount, :integer
 			arg :type, :state_type
-			arg :next_state_id, :id
+			arg :node_id, :id
 			arg :resource_id, :id
 			#middleware TermineWeb.AdminAuthentication
 			resolve &Resolvers.State.update/2

@@ -8,6 +8,6 @@ defmodule TermineWeb.Types.Node do
 		field :name, :string
 		field :hash, :string
 		field :intro_text, :string
-		field :state, :state, resolve: dataloader(Termine.Worlds)
+		field :current_state, :state, resolve: dataloader(Termine.Worlds)
 	end
 end

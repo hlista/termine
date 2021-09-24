@@ -16,12 +16,17 @@ defmodule TermineWeb.Resolvers.Node do
 	end
 
 	defp generate_hash() do
-		for _ <- 1..6, into: "", do: <<Enum.random('0123456789abcdef')>>
+		for _ <- 1..6, into: "", do: <<Enum.random('0123456789abcdefghijklmnopqrstuvwxyz')>>
 	end
 
 	defp ids_to_integer(params) do
 		params
-		|> Map.take([:state_id])
-		|> Enum.reduce(params, fn {key, value}, acc -> Map.put(acc, key, String.to_integer(value)) end)
+		|> Map.take([:current_state_id, :state_id_array])
+		|> Enum.reduce(params, fn {key, value}, acc -> 
+			cond do
+				is_list(value) -> Map.put(acc, key, Enum.map(value, fn x -> String.to_integer(x) end))
+				is_binary(value) -> Map.put(acc, key, String.to_integer(value))
+			end
+		end)
 	end
 end

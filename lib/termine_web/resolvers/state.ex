@@ -17,7 +17,7 @@ defmodule TermineWeb.Resolvers.State do
 
 	defp ids_to_integer(params) do
 		params
-		|> Map.take([:next_state_id, :resource_id])
+		|> Map.take([:node_id, :resource_id])
 		|> Enum.reduce(params, fn {key, value}, acc -> Map.put(acc, key, String.to_integer(value)) end)
 	end
 

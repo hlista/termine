@@ -10,6 +10,6 @@ defmodule TermineWeb.Types.State do
     	field :resource_amount, :integer
     	field :resource_id, :id
     	field :type, :state_type
-    	field :next_state_id, :id
+    	field :node_id, :id
 	end
 end
