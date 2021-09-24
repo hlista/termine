@@ -9,5 +9,7 @@ defmodule TermineWeb.Types.Node do
 		field :hash, :string
 		field :intro_text, :string
 		field :current_state, :state, resolve: dataloader(Termine.Worlds)
+		field :state_id_array, list_of(:id)
+		field :states, list_of(:state), resolve: dataloader(Termine.Worlds)
 	end
 end
