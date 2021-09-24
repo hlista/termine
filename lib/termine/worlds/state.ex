@@ -5,10 +5,13 @@ defmodule Termine.Worlds.State do
   schema "states" do
     field :history_text, :string
     field :inspect_text, :string
-    field :resource_amount, :integer
-    field :type, Ecto.Enum, values: [:mineable, :blocking, :attackable, :donatable]
-    belongs_to :resource, Termine.Items.Resource
+    field :type, Ecto.Enum, values: [:mineable, :attackable, :donatable, :block, :block_until, :loop, :loop_until]
     belongs_to :node, Termine.Worlds.Node
+
+    has_one :state_type_collectable, Termine.StateType.Collectable
+    has_one :state_type_block_until, Termine.StateType.BlockUntil
+    has_one :state_type_loop, Termine.StateType.Loop
+    has_one :state_type_loop_until, Termine.StateType.LoopUntil
 
   end
 

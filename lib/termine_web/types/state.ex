@@ -3,7 +3,7 @@ defmodule TermineWeb.Types.State do
 
 	import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-	enum :state_type, values: [:mineable, :blocking, :attackable, :donatable]
+	enum :state_type, values: [:mineable, :attackable, :donatable, :block, :block_until, :loop, :loop_until]
 
 	object :state do
 		field :id, :id
