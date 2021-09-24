@@ -12,12 +12,10 @@ defmodule Termine.Repo.Migrations.CreateStates do
       add :type, :state_type
       add :resource_amount, :integer
       add :resource_id, references(:resources, on_delete: :nothing)
-      add :next_state_id, references(:states, on_delete: :nothing)
 
     end
 
     create index(:states, [:resource_id])
-    create index(:states, [:next_state_id])
   end
 end
 

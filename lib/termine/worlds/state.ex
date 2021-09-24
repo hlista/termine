@@ -8,7 +8,7 @@ defmodule Termine.Worlds.State do
     field :resource_amount, :integer
     field :type, Ecto.Enum, values: [:mineable, :blocking, :attackable, :donatable]
     belongs_to :resource, Termine.Items.Resource
-    belongs_to :next_state, Termine.Worlds.State
+    belongs_to :node, Termine.Worlds.Node
 
   end
 
@@ -19,7 +19,7 @@ defmodule Termine.Worlds.State do
   @doc false
   def changeset(state, attrs) do
     state
-    |> cast(attrs, [:history_text, :inspect_text, :resource_amount, :type, :next_state_id, :resource_id])
+    |> cast(attrs, [:history_text, :inspect_text, :resource_amount, :type, :resource_id, :node_id])
     |> validate_required([:history_text, :inspect_text, :resource_amount, :type])
   end
 end
