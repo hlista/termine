@@ -33,6 +33,7 @@ defmodule TermineWeb.Schema do
 		dataloader = 
 			Dataloader.add_source(Dataloader.new(), Termine.Worlds, source)
 			|> Dataloader.add_source(Termine.Characters, source)
+			|> Dataloader.add_source(Termine.StateTypes, source)
 
 		Map.put(ctx, :loader, dataloader)
 	end

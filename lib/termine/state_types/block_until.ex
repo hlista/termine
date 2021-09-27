@@ -1,4 +1,4 @@
-defmodule Termine.StateType.BlockUntil do
+defmodule Termine.StateTypes.BlockUntil do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -8,10 +8,14 @@ defmodule Termine.StateType.BlockUntil do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.StateTypes.BlockUntil{}, params)
+  end
+
   @doc false
   def changeset(block_until, attrs) do
     block_until
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:state_id, :until_state_id])
+    |> validate_required([:state_id, :until_state_id])
   end
 end

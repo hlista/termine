@@ -1,4 +1,4 @@
-defmodule Termine.StateType.Collectable do
+defmodule Termine.StateTypes.Collectable do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -9,10 +9,14 @@ defmodule Termine.StateType.Collectable do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.StateTypes.Collectable{}, params)
+  end
+
   @doc false
   def changeset(collectable, attrs) do
     collectable
-    |> cast(attrs, [:amount])
-    |> validate_required([:amount])
+    |> cast(attrs, [:amount, :resource_id, :state_id])
+    |> validate_required([:amount, :resource_id, :state_id])
   end
 end

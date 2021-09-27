@@ -1,4 +1,4 @@
-defmodule Termine.StateType.LoopUntil do
+defmodule Termine.StateTypes.LoopUntil do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -9,10 +9,14 @@ defmodule Termine.StateType.LoopUntil do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.StateTypes.LoopUntil{}, params)
+  end
+
   @doc false
   def changeset(loop_until, attrs) do
     loop_until
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:state_id, :go_to_state_id, :until_state_id])
+    |> validate_required([:state_id, :go_to_state_id, :until_state_id])
   end
 end

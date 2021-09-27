@@ -3,15 +3,14 @@ defmodule Termine.Worlds.State do
   import Ecto.Changeset
 
   schema "states" do
-    field :history_text, :string
     field :inspect_text, :string
     field :type, Ecto.Enum, values: [:mineable, :attackable, :donatable, :block, :block_until, :loop, :loop_until]
     belongs_to :node, Termine.Worlds.Node
 
-    has_one :state_type_collectable, Termine.StateType.Collectable
-    has_one :state_type_block_until, Termine.StateType.BlockUntil
-    has_one :state_type_loop, Termine.StateType.Loop
-    has_one :state_type_loop_until, Termine.StateType.LoopUntil
+    has_one :state_type_collectable, Termine.StateTypes.Collectable
+    has_one :state_type_block_until, Termine.StateTypes.BlockUntil
+    has_one :state_type_loop, Termine.StateTypes.Loop
+    has_one :state_type_loop_until, Termine.StateTypes.LoopUntil
 
   end
 
@@ -22,7 +21,7 @@ defmodule Termine.Worlds.State do
   @doc false
   def changeset(state, attrs) do
     state
-    |> cast(attrs, [:history_text, :inspect_text, :resource_amount, :type, :resource_id, :node_id])
-    |> validate_required([:history_text, :inspect_text, :resource_amount, :type])
+    |> cast(attrs, [:inspect_text, :type, :node_id])
+    |> validate_required([:inspect_text, :type])
   end
 end

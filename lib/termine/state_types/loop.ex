@@ -1,4 +1,4 @@
-defmodule Termine.StateType.Loop do
+defmodule Termine.StateTypes.Loop do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -8,10 +8,14 @@ defmodule Termine.StateType.Loop do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.StateTypes.Loop{}, params)
+  end
+
   @doc false
   def changeset(loop, attrs) do
     loop
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:state_id, :go_to_state_id])
+    |> validate_required([:state_id, :go_to_state_id])
   end
 end
