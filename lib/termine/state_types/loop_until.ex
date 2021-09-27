@@ -16,7 +16,7 @@ defmodule Termine.StateTypes.LoopUntil do
   @doc false
   def changeset(loop_until, attrs) do
     loop_until
-    |> cast(attrs, [:state_id, :go_to_state_id, :until_state_id])
-    |> validate_required([:state_id, :go_to_state_id, :until_state_id])
+    |> cast(attrs, [:go_to_state_id, :until_state_id])
+    |> validate_required([:go_to_state_id, :until_state_id])
   end
 end

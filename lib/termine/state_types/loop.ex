@@ -15,7 +15,7 @@ defmodule Termine.StateTypes.Loop do
   @doc false
   def changeset(loop, attrs) do
     loop
-    |> cast(attrs, [:state_id, :go_to_state_id])
-    |> validate_required([:state_id, :go_to_state_id])
+    |> cast(attrs, [:go_to_state_id])
+    |> validate_required([:go_to_state_id])
   end
 end

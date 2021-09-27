@@ -15,7 +15,7 @@ defmodule Termine.StateTypes.BlockUntil do
   @doc false
   def changeset(block_until, attrs) do
     block_until
-    |> cast(attrs, [:state_id, :until_state_id])
-    |> validate_required([:state_id, :until_state_id])
+    |> cast(attrs, [:until_state_id])
+    |> validate_required([:until_state_id])
   end
 end

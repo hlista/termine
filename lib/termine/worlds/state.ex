@@ -23,5 +23,9 @@ defmodule Termine.Worlds.State do
     state
     |> cast(attrs, [:inspect_text, :type, :node_id])
     |> validate_required([:inspect_text, :type])
+    |> cast_assoc(:state_type_collectable) 
+    |> cast_assoc(:state_type_block_until)
+    |> cast_assoc(:state_type_loop)
+    |> cast_assoc(:state_type_loop_until)
   end
 end

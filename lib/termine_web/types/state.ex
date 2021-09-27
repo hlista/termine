@@ -35,26 +35,8 @@ defmodule TermineWeb.Types.State do
 		field :until_state_id, :id
 	end
 
-	input_object :input_state_type_object do
-		field :mineable, :input_state_type_mineable
-		field :attackable, :input_state_type_attackable
-		field :donatable, :input_state_type_donatable
-		field :block_until, :input_state_type_block_until
-		field :loop, :input_state_type_loop
-		field :loop_until, :input_state_type_loop_until
-	end
 
-	input_object :input_state_type_mineable do
-		field :amount, :integer
-		field :resource_id, :id
-	end
-
-	input_object :input_state_type_attackable do
-		field :amount, :integer
-		field :resource_id, :id
-	end
-
-	input_object :input_state_type_donatable do
+	input_object :input_state_type_collectable do
 		field :amount, :integer
 		field :resource_id, :id
 	end

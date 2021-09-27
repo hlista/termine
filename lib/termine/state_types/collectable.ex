@@ -16,7 +16,7 @@ defmodule Termine.StateTypes.Collectable do
   @doc false
   def changeset(collectable, attrs) do
     collectable
-    |> cast(attrs, [:amount, :resource_id, :state_id])
-    |> validate_required([:amount, :resource_id, :state_id])
+    |> cast(attrs, [:amount, :resource_id])
+    |> validate_required([:amount, :resource_id])
   end
 end
