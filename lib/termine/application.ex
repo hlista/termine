@@ -14,7 +14,8 @@ defmodule Termine.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Termine.PubSub},
       # Start the Endpoint (http/https)
-      TermineWeb.Endpoint
+      TermineWeb.Endpoint,
+      {Redix, name: :redix}
       # Start a worker by calling: Termine.Worker.start_link(arg)
       # {Termine.Worker, arg}
     ]
