@@ -12,10 +12,16 @@ defmodule Termine.Distributor do
 		GenServer.start_link(__MODULE__, state, opts)
 	end
 
-	@impl
+	@impl true
 	def init(state) do
 		schedule_distribution()
 		{:ok, Impl.initialize_state()}
+	end
+
+	@impl true
+	def handle_info(:distribute, state) do
+		schedule_distribution()
+		{:noreply, %{state | nodes: Impl.increment_nodes_miners_hits(state.nodes)}}
 	end
 
 	defp schedule_distribution() do
