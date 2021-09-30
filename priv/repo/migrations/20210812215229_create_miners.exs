@@ -4,7 +4,7 @@ defmodule Termine.Repo.Migrations.CreateMiners do
   def change do
     create table(:miners) do
       add :name, :string
-      add :describtion, :string
+      add :description, :string
 
     end
 

@@ -8,6 +8,10 @@ defmodule Termine.Miners.Miner do
 
   end
 
+   def create_changeset(params) do
+    changeset(%Termine.Miners.Miner{}, params)
+  end
+
   @doc false
   def changeset(miner, attrs) do
     miner
