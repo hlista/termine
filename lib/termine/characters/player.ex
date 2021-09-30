@@ -7,6 +7,8 @@ defmodule Termine.Characters.Player do
     belongs_to :location, Termine.Worlds.Node
     many_to_many :history_nodes, Termine.Worlds.Node, join_through: Termine.Characters.PlayerNodeHistory
     has_one :inventory, Termine.Characters.Inventory
+    has_many :player_miners, Termine.Miners.PlayerMiner
+    has_many :miners, Termine.Miners.Miner, join_through: Termine.Miners.PlayerMiner
     field :username, :string
     
   end
