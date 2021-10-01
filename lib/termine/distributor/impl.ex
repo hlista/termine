@@ -37,7 +37,7 @@ defmodule Termine.Distributor.Impl do
 	def increment_nodes_miners_hits(nodes) do
 		nodes
 		|> Enum.map(fn {id, node} ->
-			{id, Map.update(node, :miners, %{}, fn current_value -> increment_miners_hits(current_value) end)}
+			{id, Map.update(node, :miners, %{}, fn miner -> increment_miners_hits(miner) end)}
 		end)
 		|> Enum.into(%{})
 	end
@@ -45,9 +45,54 @@ defmodule Termine.Distributor.Impl do
 	def increment_miners_hits(miners) do
 		miners
 		|> Enum.map(fn {id, miner} -> 
-			{id, Map.update(miner, :hits, 0, fn current_value -> current_value + 1 end)}
+			{id, Map.update(miner, :hits, 0, fn hits -> hits + 1 end)}
 		end)
 		|> Enum.into(%{})
+	end
+
+	def distribute(nodes) do
+		nodes
+		|> Enum.map(fn {id, node} ->
+			{id, Map.update(node, :miners, %{}, fn miner -> calculate_miners_reward(miner, node.resource_id) end)}
+		end)
+		|> Enum.into(%{})
+	end
+
+	def calculate_miners_reward(miner, resource_id) do
+		nodes
+		|> Enum.map(fn {id, miner} ->
+			{id, Map.update(miner, :hits, 0, fn hits -> 
+				calculate_reward(miner.expertise, hits)
+				0
+			end)}
+		end)
+		|> Enum.into(%{})
+	end
+
+	def caluclate_reward(expertise_level, trials) do
+		{numerator, denominator} = case expertise_level do
+			1 -> {1, 87}
+			2 -> {1, 61}
+			3 -> {1, 43}
+			4 -> {2, 61}
+			5 -> {1, 20}
+		end
+		binomial(numerator, denominator, trials)
+	end
+
+	def binomial(numerator, denominator, trials) do
+		random_number = :rand.uniform()
+		probability_0 = :math.pow((denominator - numerator) / denominator, trials)
+		calculate_successes(0, random_number, probability_0, probability_0, numerator, denominator, trials)
+	end
+
+	def calculate_successes(n, rand, accumulated_probability, _, _, _, _) when rand < accumulated_probability do
+		n
+	end
+
+	def calculate_successes(n, rand, accumulated_probability, probability, numerator, denominator, trials) do
+		new_probability = probability * (numerator * (trials - n)) / ((denominator - numerator) * (n + 1))
+		calculate_successes(n + 1, rand, accumulated_probability + new_probability, new_probability, numerator, denominator, trials)
 	end
 
 end
