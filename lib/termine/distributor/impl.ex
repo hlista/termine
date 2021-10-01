@@ -37,7 +37,7 @@ defmodule Termine.Distributor.Impl do
 	def increment_nodes_miners_hits(nodes) do
 		nodes
 		|> Enum.map(fn {id, node} ->
-			{id, Map.update(node, :miners, %{}, fn miner -> increment_miners_hits(miner) end)}
+			{id, Map.update(node, :miners, %{}, fn miners -> increment_miners_hits(miners) end)}
 		end)
 		|> Enum.into(%{})
 	end
@@ -53,13 +53,13 @@ defmodule Termine.Distributor.Impl do
 	def distribute(nodes) do
 		nodes
 		|> Enum.map(fn {id, node} ->
-			{id, Map.update(node, :miners, %{}, fn miner -> calculate_miners_reward(miner, node.resource_id) end)}
+			{id, Map.update(node, :miners, %{}, fn miners -> calculate_miners_reward(miners, node.resource_id) end)}
 		end)
 		|> Enum.into(%{})
 	end
 
-	def calculate_miners_reward(miner, resource_id) do
-		nodes
+	def calculate_miners_reward(miners, resource_id) do
+		miners
 		|> Enum.map(fn {id, miner} ->
 			{id, Map.update(miner, :hits, 0, fn hits -> 
 				calculate_reward(miner.expertise, hits)
@@ -69,7 +69,7 @@ defmodule Termine.Distributor.Impl do
 		|> Enum.into(%{})
 	end
 
-	def caluclate_reward(expertise_level, trials) do
+	def calculate_reward(expertise_level, trials) do
 		{numerator, denominator} = case expertise_level do
 			1 -> {1, 87}
 			2 -> {1, 61}

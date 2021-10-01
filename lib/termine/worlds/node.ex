@@ -9,7 +9,7 @@ defmodule Termine.Worlds.Node do
     has_many :neighbors, Termine.Worlds.Neighbor, foreign_key: :parent_node_id
     has_many :neighbor_nodes, through: [:neighbors, :child_node]
     has_many :players, Termine.Characters.Player, foreign_key: :location_id
-    has_many :player_miners, Termine.Characters.PlayerMiner, foreign_key: :location_id
+    has_many :player_miners, Termine.Miners.PlayerMiner, foreign_key: :location_id
 
     belongs_to :current_state, Termine.Worlds.State
     has_many :states, Termine.Worlds.State
