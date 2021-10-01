@@ -5,7 +5,7 @@ defmodule Termine.Distributor.Impl do
 	def initialize_state() do
 		{:ok, nodes} = Worlds.list_nodes(%{preload: [player_miners: [expertises: []], current_state: [state_type_collectable: []]]})
 		nodes = Enum.reduce(nodes, %{}, fn node, acc -> 
-			if node.state_type === :mineable or node.state_type === :attackable do
+			if node.current_state.type === :mineable or node.current_state.type === :attackable do
 				Map.put(acc, node.id, create_cache_structure(node))
 			else
 				acc
@@ -62,7 +62,7 @@ defmodule Termine.Distributor.Impl do
 		miners
 		|> Enum.map(fn {id, miner} ->
 			{id, Map.update(miner, :hits, 0, fn hits -> 
-				calculate_reward(miner.expertise, hits)
+				IO.inspect calculate_reward(miner.expertise, hits)
 				0
 			end)}
 		end)

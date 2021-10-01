@@ -15,6 +15,7 @@ defmodule Termine.Distributor do
 	@impl true
 	def init(state) do
 		schedule_distribution()
+		schedule_increment()
 		{:ok, Impl.initialize_state()}
 	end
 

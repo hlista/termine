@@ -7,6 +7,10 @@ defmodule Termine.Items.Resource do
 
   end
 
+  def create_changeset(params) do
+    changeset(%Termine.Items.Resource{}, params)
+  end
+
   @doc false
   def changeset(resource, attrs) do
     resource

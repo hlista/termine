@@ -6,12 +6,14 @@ defmodule TermineWeb.Schema do
 	import_types TermineWeb.Types.State
 	import_types TermineWeb.Types.Neighbor
 	import_types TermineWeb.Types.Miner
+	import_types TermineWeb.Types.Resource
 
 	import_types TermineWeb.Schema.Mutations.Player
 	import_types TermineWeb.Schema.Mutations.Node
 	import_types TermineWeb.Schema.Mutations.State
 	import_types TermineWeb.Schema.Mutations.Neighbor
 	import_types TermineWeb.Schema.Mutations.Miner
+	import_types TermineWeb.Schema.Mutations.Resource
 
 	import_types TermineWeb.Schema.Queries.Player
 	import_types TermineWeb.Schema.Queries.Node
@@ -29,6 +31,7 @@ defmodule TermineWeb.Schema do
 		import_fields :state_mutations
 		import_fields :neighbor_mutations
 		import_fields :miner_mutations
+		import_fields :resource_mutations
 	end
 
 	def context(ctx) do
