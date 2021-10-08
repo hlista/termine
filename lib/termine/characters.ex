@@ -36,6 +36,15 @@ defmodule Termine.Characters do
 		Actions.find(Player, params)
 	end
 
+	def add_item_to_inventory(inventory_id, resource_id, amount) do
+		case Actions.find(InventoryItem, %{inventory_id: inventory_id, resource_id: resource_id}) do
+			{:ok, inventory_item} ->
+				{:ok, Repo.update_all(InventoryItem.query_increment_amount(inventory_item.id, amount), [])}
+			{:error, _} ->
+				Actions.create(InventoryItem, %{inventory_id: inventory_id, resource_id: resource_id, amount: amount})
+		end
+	end
+
 	defp find_valid_node(hash, nodes) do
 		Enum.find(nodes, fn x -> x.hash === hash end)
 	end
