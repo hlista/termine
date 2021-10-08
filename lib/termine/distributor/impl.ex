@@ -1,9 +1,9 @@
 defmodule Termine.Distributor.Impl do
-
 	alias Termine.Worlds
+	alias Termine.Characters
 	
 	def initialize_state() do
-		{:ok, nodes} = Worlds.list_nodes(%{preload: [player_miners: [expertises: []], current_state: [state_type_collectable: []]]})
+		{:ok, nodes} = Worlds.list_nodes(%{preload: [player_miners: [expertises: [], inventory: []], current_state: [state_type_collectable: []]]})
 		nodes = Enum.reduce(nodes, %{}, fn node, acc -> 
 			if node.current_state.type === :mineable or node.current_state.type === :attackable do
 				Map.put(acc, node.id, create_cache_structure(node))
@@ -25,7 +25,7 @@ defmodule Termine.Distributor.Impl do
 	def create_miner_cache_structure(miners, resource_id) do
 		miners
 		|> Enum.map(fn miner -> 
-			{miner.id, %{expertise: get_miner_expertise_level(miner, resource_id), hits: 0}}
+			{miner.id, %{expertise: get_miner_expertise_level(miner, resource_id), hits: 0, inventory_id: miner.inventory.id}}
 		end)
 		|> Enum.into(%{})
 	end
@@ -62,7 +62,7 @@ defmodule Termine.Distributor.Impl do
 		miners
 		|> Enum.map(fn {id, miner} ->
 			{id, Map.update(miner, :hits, 0, fn hits -> 
-				IO.inspect calculate_reward(miner.expertise, hits)
+				Characters.add_item_to_inventory(miner.inventory_id, resource_id, calculate_reward(miner.expertise, hits))
 				0
 			end)}
 		end)

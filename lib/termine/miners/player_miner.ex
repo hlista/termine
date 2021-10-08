@@ -7,6 +7,7 @@ defmodule Termine.Miners.PlayerMiner do
     belongs_to :player, Termine.Characters.Player
     belongs_to :location, Termine.Worlds.Node
     has_many :expertises, Termine.Miners.Expertise
+    has_one :inventory, through: [:player, :inventory]
 
   end
 
