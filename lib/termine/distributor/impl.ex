@@ -51,6 +51,7 @@ defmodule Termine.Distributor.Impl do
 				reward = calculate_reward(String.to_integer(expertise_level), String.to_integer(hits))
 				Characters.add_item_to_inventory(miner.inventory.id, String.to_integer(resource_id), reward)
 				Redix.command(:redix, ["HSET", "node:" <> Integer.to_string(node.id), "hits:" <> Integer.to_string(miner.id), 0])
+				Redix.command(:redix, ["HINCRBY", "node:" <> Integer.to_string(node.id), "amount_left", -1 * reward])
 			end)
 		end)
 	end
