@@ -10,5 +10,10 @@ defmodule TermineWeb.Schema.Mutations.Miner do
 			#middleware TermineWeb.AdminAuthentication
 			resolve &Resolvers.Miner.create/2
 		end
+
+		field :send_player_miner, :player_miner do
+			arg :id, non_null(:id)
+			resolve &Resolvers.Miner.send/2
+		end
 	end
 end

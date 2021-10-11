@@ -19,6 +19,6 @@ defmodule Termine.Miners.PlayerMiner do
   def changeset(player_miner, attrs) do
     player_miner
     |> cast(attrs, [:miner_id, :player_id, :location_id])
-    |> validate_required([:miner_id, :player_id, :location_id])
+    |> validate_required([:miner_id, :player_id])
   end
 end

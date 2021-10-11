@@ -40,6 +40,8 @@ defmodule TermineWeb.Schema do
 			Dataloader.add_source(Dataloader.new(), Termine.Worlds, source)
 			|> Dataloader.add_source(Termine.Characters, source)
 			|> Dataloader.add_source(Termine.StateTypes, source)
+			|> Dataloader.add_source(Termine.Miners, source)
+			|> Dataloader.add_source(Termine.Items, source)
 
 		Map.put(ctx, :loader, dataloader)
 	end
