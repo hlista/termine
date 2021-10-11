@@ -15,6 +15,8 @@ defmodule Termine.Distributor.Impl do
 	end
 
 	def create_cache_structure(node) do
+		Redix.command(:redix, ["HSET", "node:" <> node.hash, "resource_id", node.current_state.state_type_collectable.resource_id])
+		Redix.command(:redix, ["HSET", "node:" <> node.hash, "amount_left", node.current_state.state_type_collectable.amount])
 		%{
 			resource_id: node.current_state.state_type_collectable.resource_id,
 			amount_left: node.current_state.state_type_collectable.amount,
