@@ -4,9 +4,10 @@ defmodule Termine.Distributor.Impl do
 	
 	def initialize_state() do
 		{:ok, nodes} = Worlds.list_nodes(%{preload: [player_miners: [expertises: [], inventory: []], current_state: [state_type_collectable: []]]})
-		nodes = Enum.reduce(nodes, %{}, fn node, acc -> 
+		nodes = Enum.reduce(nodes, [], fn node, acc -> 
 			if node.current_state.type === :mineable or node.current_state.type === :attackable do
-				Map.put(acc, node.id, create_cache_structure(node))
+				create_cache_structure(node)
+				[node | acc]
 			else
 				acc
 			end
@@ -34,19 +35,11 @@ defmodule Termine.Distributor.Impl do
 	end
 
 	def increment_nodes_miners_hits(nodes) do
-		nodes
-		|> Enum.map(fn {id, node} ->
-			{id, Map.update(node, :miners, %{}, fn miners -> increment_miners_hits(miners) end)}
+		Enum.each(nodes, fn node -> 
+			Enum.each(node.player_miners, fn miner ->
+				Redix.command(:redix, ["HINCRBY", "node:" <> Integer.to_string(node.id), "hits:" <> Integer.to_string(miner.id), 1])
+			end)
 		end)
-		|> Enum.into(%{})
-	end
-
-	def increment_miners_hits(miners) do
-		miners
-		|> Enum.map(fn {id, miner} -> 
-			{id, Map.update(miner, :hits, 0, fn hits -> hits + 1 end)}
-		end)
-		|> Enum.into(%{})
 	end
 
 	def distribute(nodes) do
