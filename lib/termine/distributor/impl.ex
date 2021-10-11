@@ -43,22 +43,16 @@ defmodule Termine.Distributor.Impl do
 	end
 
 	def distribute(nodes) do
-		nodes
-		|> Enum.map(fn {id, node} ->
-			{id, Map.update(node, :miners, %{}, fn miners -> calculate_miners_reward(miners, node.resource_id) end)}
+		Enum.each(nodes, fn node ->
+			Enum.each(node.player_miners, fn miner ->
+				{:ok, hits} = Redix.command(:redix, ["HGET", "node:" <> Integer.to_string(node.id), "hits:" <> Integer.to_string(miner.id)])
+				{:ok, resource_id} = Redix.command(:redix, ["HGET", "node:" <> Integer.to_string(node.id), "resource_id"])
+				{:ok, expertise_level} = Redix.command(:redix, ["HGET", "player_miner:" <> Integer.to_string(miner.id), "expertise:" <> resource_id])
+				reward = calculate_reward(String.to_integer(expertise_level), String.to_integer(hits))
+				Characters.add_item_to_inventory(miner.inventory.id, String.to_integer(resource_id), reward)
+				Redix.command(:redix, ["HSET", "node:" <> Integer.to_string(node.id), "hits:" <> Integer.to_string(miner.id), 0])
+			end)
 		end)
-		|> Enum.into(%{})
-	end
-
-	def calculate_miners_reward(miners, resource_id) do
-		miners
-		|> Enum.map(fn {id, miner} ->
-			{id, Map.update(miner, :hits, 0, fn hits -> 
-				Characters.add_item_to_inventory(miner.inventory_id, resource_id, calculate_reward(miner.expertise, hits))
-				0
-			end)}
-		end)
-		|> Enum.into(%{})
 	end
 
 	def calculate_reward(expertise_level, trials) do
