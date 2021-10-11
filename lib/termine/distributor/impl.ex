@@ -15,21 +15,18 @@ defmodule Termine.Distributor.Impl do
 	end
 
 	def create_cache_structure(node) do
-		Redix.command(:redix, ["HSET", "node:" <> node.hash, "resource_id", node.current_state.state_type_collectable.resource_id])
-		Redix.command(:redix, ["HSET", "node:" <> node.hash, "amount_left", node.current_state.state_type_collectable.amount])
-		%{
-			resource_id: node.current_state.state_type_collectable.resource_id,
-			amount_left: node.current_state.state_type_collectable.amount,
-			miners: create_miner_cache_structure(node.player_miners, node.current_state.state_type_collectable.resource_id)
-		}
+		Redix.command(:redix, ["HSET", "node:" <> Integer.to_string(node.id), "resource_id", node.current_state.state_type_collectable.resource_id])
+		Redix.command(:redix, ["HSET", "node:" <> Integer.to_string(node.id), "amount_left", node.current_state.state_type_collectable.amount])
+		create_miner_cache_structure(node, node.player_miners, node.current_state.state_type_collectable.resource_id)
 	end
 
-	def create_miner_cache_structure(miners, resource_id) do
+	def create_miner_cache_structure(node, miners, resource_id) do
 		miners
-		|> Enum.map(fn miner -> 
-			{miner.id, %{expertise: get_miner_expertise_level(miner, resource_id), hits: 0, inventory_id: miner.inventory.id}}
+		|> Enum.each(fn miner ->
+			Redix.command(:redix, ["HSET", "player_miner:" <> Integer.to_string(miner.id), "expertise:" <> Integer.to_string(resource_id), get_miner_expertise_level(miner, resource_id)])
+			Redix.command(:redix, ["HSET", "player_miner:" <> Integer.to_string(miner.id), "inventory_id", miner.inventory.id])
+			Redix.command(:redix, ["HSET", "node:" <> Integer.to_string(node.id), "hits:" <> Integer.to_string(miner.id), 0])
 		end)
-		|> Enum.into(%{})
 	end
 
 	def get_miner_expertise_level(miner, resource_id) do
