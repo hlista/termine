@@ -49,9 +49,17 @@ defmodule Termine.Redis do
 	end
 
 	def set_player_miners_expertise(player_miner_id, resource_id, expertise_level) do
-		hash = "player_miner:" <> player_miner_id
-		field = "expertise:" <> resource_id
+		hash = "player_miner:" <> player_miner_id <> ":expertise"
+		field = resource_id
 		Redix.command(:redix, ["HSET", hash, field, expertise_level])
+	end
+
+	def set_all_player_miners_expertises(player_miner_id, expertises) do
+		hmset = Enum.reduce(expertises, [], fn expertise, acc -> 
+			[Integer.to_string(expertise.resource_id) | [Integer.to_string(expertise.level) | acc]]
+		end)
+		hmset = ["HMSET" | ["player_miner:" <> player_miner_id <> ":expertise" | hmset]]
+		Redix.command(:redix, hmset)
 	end
 
 	def set_node_resource_amount(node_id, resource_id, amount) do
@@ -66,8 +74,8 @@ defmodule Termine.Redis do
 	end
 
 	def get_player_miners_expertise(player_miner_id, resource_id) do
-		hash = "player_miner:" <> player_miner_id
-		field = "expertise:" <> resource_id
+		hash = "player_miner:" <> player_miner_id <> ":expertise"
+		field = resource_id
 		{:ok, level} = Redix.command(:redix, ["HGET", hash, field])
 		level
 	end
