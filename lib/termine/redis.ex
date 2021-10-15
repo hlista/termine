@@ -1,21 +1,27 @@
 defmodule Termine.Redis do
 
 	def delete_player_miners_hits(node_id, miner_id) do
-		hash = "node:" <> node_id
-		field = "hits:" <> miner_id
+		hash = "node:" <> node_id <> ":hits"
+		field = miner_id
 		Redix.command(:redix, ["HDEL", hash, field])
 	end
 	
 	def zero_player_miners_hits(node_id, miner_id) do
-		hash = "node:" <> node_id
-		field = "hits:" <> miner_id
+		hash = "node:" <> node_id <> ":hits"
+		field = miner_id
 		Redix.command(:redix, ["HSET", hash, field, 0])
 	end
 
 	def increment_player_miners_hits(node_id, miner_id) do
-		hash = "node:" <> node_id
-		field = "hits:" <> miner_id
+		hash = "node:" <> node_id <> ":hits"
+		field = miner_id
 		Redix.command(:redix, ["HINCRBY", hash, field, 1])
+	end
+
+	def get_all_player_miners_hits(node_id) do
+		hash = "node:" <> node_id <> ":hits"
+		{:ok, list} = Redix.command(:redix, ["HGETALL", hash])
+		convert_redis_output_list_to_map(list)
 	end
 
 	def set_player_miners_inventory_id(player_miner_id, inventory_id) do
@@ -44,7 +50,7 @@ defmodule Termine.Redis do
 	def get_player_miners_expertise(player_miner_id, resource_id) do
 		hash = "player_miner:" <> player_miner_id
 		field = "expertise:" <> resource_id
-		{:ok, level} = Redix.command(:redix, ["HGET", hash, field)
+		{:ok, level} = Redix.command(:redix, ["HGET", hash, field])
 		level
 	end
 
@@ -65,5 +71,12 @@ defmodule Termine.Redis do
 		hash = "node:" <> node_id
 		{:ok, resource_id} = Redix.command(:redix, ["HGET", hash, "resource_id"])
 		resource_id
+	end
+
+	defp convert_redis_output_list_to_map(list) do
+		list
+		|> Enum.chuck_every(2)
+		|> Enum.map(fn [x, y] -> {x, y} end)
+		|> Enum.into(%{})
 	end
 end

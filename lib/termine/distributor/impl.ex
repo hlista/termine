@@ -8,7 +8,7 @@ defmodule Termine.Distributor.Impl do
 		nodes = Enum.reduce(nodes, [], fn node, acc -> 
 			if node.current_state.type === :mineable or node.current_state.type === :attackable do
 				create_cache_structure(node)
-				[node | acc]
+				[Integer.to_string(node.id) | acc]
 			else
 				acc
 			end
@@ -34,19 +34,18 @@ defmodule Termine.Distributor.Impl do
 	end
 
 	def increment_nodes_miners_hits(nodes) do
-		Enum.each(nodes, fn node -> 
-			Enum.each(node.player_miners, fn miner ->
-				Redis.increment_player_miners_hits(Integer.to_string(node.id), Integer.to_string(miner.id))
+		Enum.each(nodes, fn node_id ->
+			player_miner_map = Redis.get_all_player_miners_hits(node_id)
+			Enum.each(player_miner_map, fn {player_miner_id, _} ->
+				Redis.increment_player_miners_hits(node_id, player_miner_id)
 			end)
 		end)
 	end
 
 	def distribute(nodes) do
-		Enum.each(nodes, fn node ->
-			Enum.each(node.player_miners, fn miner ->
-				node_id = Integer.to_string(node.id)
-				player_miner_id = Integer.to_string(miner.id)
-				hits = Redis.get_player_miners_hits(node_id, player_miner_id)
+		Enum.each(nodes, fn node_id ->
+			player_miner_map = Redis.get_all_player_miners_hits(node_id)
+			Enum.each(player_miner_map, fn {player_miner_id, hits} ->
 				resource_id = Redis.get_nodes_resource_id(node_id)
 				expertise_level = Redis.get_player_miners_expertise(player_miner_id, resource_id)
 				inventory_id = Redis.get_player_miners_inventory_id(player_miner_id)
