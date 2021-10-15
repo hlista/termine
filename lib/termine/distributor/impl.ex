@@ -1,6 +1,7 @@
 defmodule Termine.Distributor.Impl do
 	alias Termine.Worlds
 	alias Termine.Characters
+	alias Termine.Redis
 	
 	def initialize_state() do
 		{:ok, nodes} = Worlds.list_nodes(%{preload: [player_miners: [expertises: [], inventory: []], current_state: [state_type_collectable: []]]})
@@ -16,17 +17,15 @@ defmodule Termine.Distributor.Impl do
 	end
 
 	def create_cache_structure(node) do
-		Redix.command(:redix, ["HSET", "node:" <> Integer.to_string(node.id), "resource_id", node.current_state.state_type_collectable.resource_id])
-		Redix.command(:redix, ["HSET", "node:" <> Integer.to_string(node.id), "amount_left", node.current_state.state_type_collectable.amount])
+		Redis.set_node_resource_amount(Integer.to_string(node.id), node.current_state.state_type_collectable.resource_id, node.current_state.state_type_collectable.amount)
 		create_miner_cache_structure(node, node.player_miners, node.current_state.state_type_collectable.resource_id)
 	end
 
 	def create_miner_cache_structure(node, miners, resource_id) do
 		miners
 		|> Enum.each(fn miner ->
-			Redix.command(:redix, ["HSET", "player_miner:" <> Integer.to_string(miner.id), "expertise:" <> Integer.to_string(resource_id), get_miner_expertise_level(miner, resource_id)])
-			Redix.command(:redix, ["HSET", "player_miner:" <> Integer.to_string(miner.id), "inventory_id", miner.inventory.id])
-			Redix.command(:redix, ["HSET", "node:" <> Integer.to_string(node.id), "hits:" <> Integer.to_string(miner.id), 0])
+			Redis.set_player_miners_expertise(Integer.to_string(miner.id), Integer.to_string(resource_id), get_miner_expertise_level(miner, resource_id))
+			Redis.set_player_miners_inventory_id(Integer.to_string(miner.id), miner.inventory.id)
 		end)
 	end
 
@@ -37,7 +36,7 @@ defmodule Termine.Distributor.Impl do
 	def increment_nodes_miners_hits(nodes) do
 		Enum.each(nodes, fn node -> 
 			Enum.each(node.player_miners, fn miner ->
-				Redix.command(:redix, ["HINCRBY", "node:" <> Integer.to_string(node.id), "hits:" <> Integer.to_string(miner.id), 1])
+				Redis.increment_player_miners_hits(Integer.to_string(node.id), Integer.to_string(miner.id))
 			end)
 		end)
 	end
@@ -45,13 +44,16 @@ defmodule Termine.Distributor.Impl do
 	def distribute(nodes) do
 		Enum.each(nodes, fn node ->
 			Enum.each(node.player_miners, fn miner ->
-				{:ok, hits} = Redix.command(:redix, ["HGET", "node:" <> Integer.to_string(node.id), "hits:" <> Integer.to_string(miner.id)])
-				{:ok, resource_id} = Redix.command(:redix, ["HGET", "node:" <> Integer.to_string(node.id), "resource_id"])
-				{:ok, expertise_level} = Redix.command(:redix, ["HGET", "player_miner:" <> Integer.to_string(miner.id), "expertise:" <> resource_id])
+				node_id = Integer.to_string(node.id)
+				player_miner_id = Integer.to_string(miner.id)
+				hits = Redis.get_player_miners_hits(node_id, player_miner_id)
+				resource_id = Redis.get_nodes_resource_id(node_id)
+				expertise_level = Redis.get_player_miners_expertise(player_miner_id, resource_id)
+				inventory_id = Redis.get_player_miners_inventory_id(player_miner_id)
 				reward = calculate_reward(String.to_integer(expertise_level), String.to_integer(hits))
-				Characters.add_item_to_inventory(miner.inventory.id, String.to_integer(resource_id), reward)
-				Redix.command(:redix, ["HSET", "node:" <> Integer.to_string(node.id), "hits:" <> Integer.to_string(miner.id), 0])
-				Redix.command(:redix, ["HINCRBY", "node:" <> Integer.to_string(node.id), "amount_left", -1 * reward])
+				Characters.add_item_to_inventory(String.to_integer(inventory_id), String.to_integer(resource_id), reward)
+				Redis.zero_player_miners_hits(node_id, player_miner_id)
+				Redis.decrement_node_amount(node_id, reward)
 			end)
 		end)
 	end
