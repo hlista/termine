@@ -1,5 +1,23 @@
 defmodule Termine.Redis do
 
+	def set_node_to_mining(node_id) do
+		hash = "mining"
+		field = node_id
+		Redix.command(:redix, ["HSET", hash, field, 1])
+	end
+
+	def del_node_from_mining(node_id) do
+		hash = "mining"
+		field = node_id
+		Redix.command(:redix, ["HDEL", hash, field])
+	end
+
+	def get_all_mining_nodes() do
+		hash = "mining"
+		{:ok, list} = Redix.command(:redix, ["HGETALL", hash])
+		convert_redis_output_list_to_map(list)
+	end
+
 	def delete_player_miners_hits(node_id, miner_id) do
 		hash = "node:" <> node_id <> ":hits"
 		field = miner_id
@@ -75,7 +93,7 @@ defmodule Termine.Redis do
 
 	defp convert_redis_output_list_to_map(list) do
 		list
-		|> Enum.chuck_every(2)
+		|> Enum.chunk_every(2)
 		|> Enum.map(fn [x, y] -> {x, y} end)
 		|> Enum.into(%{})
 	end
