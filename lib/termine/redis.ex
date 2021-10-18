@@ -18,6 +18,12 @@ defmodule Termine.Redis do
 		convert_redis_output_list_to_map(list)
 	end
 
+	def set_player_miner_to_mining(node_id, miner_id, expertises, inventory_id) do
+		set_all_player_miners_expertises(miner_id, expertises)
+		set_player_miners_inventory_id(miner_id, inventory_id)
+		zero_player_miners_hits(node_id, miner_id)
+	end
+
 	def delete_player_miners_hits(node_id, miner_id) do
 		hash = "node:" <> node_id <> ":hits"
 		field = miner_id
