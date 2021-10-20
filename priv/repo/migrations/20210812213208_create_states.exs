@@ -9,7 +9,7 @@ defmodule Termine.Repo.Migrations.CreateStates do
     create table(:states) do
       add :inspect_text, :text
       add :type, :state_type
-
+      add :has_been_completed, :boolean, default: false
     end
   end
 end

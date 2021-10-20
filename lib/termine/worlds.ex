@@ -41,6 +41,37 @@ defmodule Termine.Worlds do
 		Actions.create(Neighbor, params)
 	end
 
+	def complete_state(node_id) do
+		node = Repo.get(Node, node_id)
+		update_state(node.current_state_id, %{has_been_completed: true})
+	end
+
+	def increment_state(node_id) do
+		node = Repo.get(Node, node_id)
+		current_state_id = node.current_state_id
+		state_id_array = node.state_id_array
+		index = Enum.find_index(state_id_array, fn x -> x === current_state_id end)
+		next_state_id = Enum.fetch!(state_id_array, index + 1)
+		next_state = Repo.get(State, next_state_id)
+		next_state = Repo.preload(next_state, @state_types)
+		case next_state.type do
+			:loop ->
+				Actions.update(Node, node_id, %{current_state_id: next_state.state_type_loop.go_to_state_id})
+			:loop_until ->
+				until_state = Repo.get(State, next_state.state_type_loop_until.until_state_id)
+				if (until_state.has_been_completed) do
+					next_state_id = Enum.fetch!(state_id_array, index + 2)
+					Actions.update(Node, node_id, %{current_state_id: next_state_id})
+				else
+					Actions.update(Node, node_id, %{current_state_id: next_state.state_type_loop_until.go_to_state_id})
+				end
+			#:block_until ->
+
+			_ ->
+				Actions.update(Node, node_id, %{current_state_id: next_state_id})
+		end
+	end
+
 	defp update_already_existing_state_type(state, params) do
 		Enum.reduce(params, params, fn {state_type, value}, acc ->
 			type = get_in(state, [Access.key(state_type)])
