@@ -22,13 +22,15 @@ defmodule Termine.Distributor do
 	@impl true
 	def handle_info(:increment, state) do
 		schedule_increment()
-		{:noreply, %{state | nodes: Impl.increment_nodes_miners_hits(state.nodes)}}
+		Impl.increment_nodes_miners_hits()
+		{:noreply, state}
 	end
 
 	@impl true
 	def handle_info(:distribute, state) do
 		schedule_distribution()
-		{:noreply, %{state | nodes: Impl.distribute(state.nodes)}}
+		Impl.distribute()
+		{:noreply, state}
 	end
 
 	defp schedule_increment() do

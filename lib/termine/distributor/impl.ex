@@ -1,72 +1,61 @@
 defmodule Termine.Distributor.Impl do
 	alias Termine.Worlds
 	alias Termine.Characters
+	alias Termine.Redis
 	
 	def initialize_state() do
 		{:ok, nodes} = Worlds.list_nodes(%{preload: [player_miners: [expertises: [], inventory: []], current_state: [state_type_collectable: []]]})
-		nodes = Enum.reduce(nodes, %{}, fn node, acc -> 
+		Enum.each(nodes, fn node -> 
 			if node.current_state.type === :mineable or node.current_state.type === :attackable do
-				Map.put(acc, node.id, create_cache_structure(node))
-			else
-				acc
+				create_cache_structure(node)
 			end
 		end)
-		%{nodes: nodes}
+		%{}
 	end
 
 	def create_cache_structure(node) do
-		%{
-			resource_id: node.current_state.state_type_collectable.resource_id,
-			amount_left: node.current_state.state_type_collectable.amount,
-			miners: create_miner_cache_structure(node.player_miners, node.current_state.state_type_collectable.resource_id)
-		}
+		Redis.set_node_resource_amount(Integer.to_string(node.id), node.current_state.state_type_collectable.resource_id, node.current_state.state_type_collectable.amount)
+		Redis.set_node_to_mining(Integer.to_string(node.id))
+		create_miner_cache_structure(node, node.player_miners, node.current_state.state_type_collectable.resource_id)
 	end
 
-	def create_miner_cache_structure(miners, resource_id) do
+	def create_miner_cache_structure(node, miners, resource_id) do
 		miners
-		|> Enum.map(fn miner -> 
-			{miner.id, %{expertise: get_miner_expertise_level(miner, resource_id), hits: 0, inventory_id: miner.inventory.id}}
+		|> Enum.each(fn miner ->
+			Redis.set_player_miners_expertise(Integer.to_string(miner.id), Integer.to_string(resource_id), get_miner_expertise_level(miner, resource_id))
+			Redis.set_player_miners_inventory_id(Integer.to_string(miner.id), miner.inventory.id)
+			Redis.zero_player_miners_hits(Integer.to_string(node.id), Integer.to_string(miner.id))
 		end)
-		|> Enum.into(%{})
 	end
 
 	def get_miner_expertise_level(miner, resource_id) do
 		Enum.find_value(miner.expertises, fn x -> if x.resource_id === resource_id, do: x.level end)
 	end
 
-	def increment_nodes_miners_hits(nodes) do
-		nodes
-		|> Enum.map(fn {id, node} ->
-			{id, Map.update(node, :miners, %{}, fn miners -> increment_miners_hits(miners) end)}
+	def increment_nodes_miners_hits() do
+		nodes = Redis.get_all_mining_nodes()
+		Enum.each(nodes, fn {node_id, _} ->
+			player_miner_map = Redis.get_all_player_miners_hits(node_id)
+			Enum.each(player_miner_map, fn {player_miner_id, _} ->
+				Redis.increment_player_miners_hits(node_id, player_miner_id)
+			end)
 		end)
-		|> Enum.into(%{})
 	end
 
-	def increment_miners_hits(miners) do
-		miners
-		|> Enum.map(fn {id, miner} -> 
-			{id, Map.update(miner, :hits, 0, fn hits -> hits + 1 end)}
+	def distribute() do
+		nodes = Redis.get_all_mining_nodes()
+		Enum.each(nodes, fn {node_id, _} ->
+			player_miner_map = Redis.get_all_player_miners_hits(node_id)
+			Enum.each(player_miner_map, fn {player_miner_id, hits} ->
+				resource_id = Redis.get_nodes_resource_id(node_id)
+				expertise_level = Redis.get_player_miners_expertise(player_miner_id, resource_id)
+				inventory_id = Redis.get_player_miners_inventory_id(player_miner_id)
+				reward = calculate_reward(String.to_integer(expertise_level), String.to_integer(hits))
+				Characters.add_item_to_inventory(String.to_integer(inventory_id), String.to_integer(resource_id), reward)
+				Redis.zero_player_miners_hits(node_id, player_miner_id)
+				Redis.decrement_node_amount(node_id, reward)
+			end)
 		end)
-		|> Enum.into(%{})
-	end
-
-	def distribute(nodes) do
-		nodes
-		|> Enum.map(fn {id, node} ->
-			{id, Map.update(node, :miners, %{}, fn miners -> calculate_miners_reward(miners, node.resource_id) end)}
-		end)
-		|> Enum.into(%{})
-	end
-
-	def calculate_miners_reward(miners, resource_id) do
-		miners
-		|> Enum.map(fn {id, miner} ->
-			{id, Map.update(miner, :hits, 0, fn hits -> 
-				Characters.add_item_to_inventory(miner.inventory_id, resource_id, calculate_reward(miner.expertise, hits))
-				0
-			end)}
-		end)
-		|> Enum.into(%{})
 	end
 
 	def calculate_reward(expertise_level, trials) do
