@@ -16,14 +16,32 @@ import "phoenix_html"
 
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
-class HelloReact extends React.Component {
+class Home extends React.Component {
 	render() {
-		return(<h1>Hello React!</h1>)
+		return (
+			<div>
+				<h1>Hello React!</h1>
+			</div>
+		)
+	}
+}
+
+
+class App extends React.Component {
+	render() {
+		return(
+			<Router>
+				<div>
+					<Route exact path="/" component={Home}/>
+				</div>
+			</Router>
+		)
 	}
 }
 
 ReactDOM.render(
-	<HelloReact/>,
-	document.getElementById("hello-react")
+	<App/>,
+	document.getElementById("termine-react")
 )
