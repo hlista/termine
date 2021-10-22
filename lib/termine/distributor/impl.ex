@@ -53,11 +53,11 @@ defmodule Termine.Distributor.Impl do
 				reward = calculate_reward(String.to_integer(expertise_level), String.to_integer(hits))
 				Characters.add_item_to_inventory(String.to_integer(inventory_id), String.to_integer(resource_id), reward)
 				Redis.zero_player_miners_hits(node_id, player_miner_id)
-				{:ok, amount_left} = Redis.decrement_node_amount(node_id, reward)
-				if (amount_left <= 0) do
-					Worlds.complete_state(node_id)
-				end
+				Redis.decrement_node_amount(node_id, reward)
 			end)
+			if (Redis.get_node_amount(node_id) <= 0) do
+				Worlds.complete_state(node_id)
+			end
 		end)
 	end
 

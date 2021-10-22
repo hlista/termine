@@ -79,6 +79,12 @@ defmodule Termine.Redis do
 		Redix.command(:redix, ["HINCRBY", hash, "amount", -1 * amount])
 	end
 
+	def get_node_amount(node_id) do
+		hash = "node:" <> node_id
+		{:ok, amount} = Redix.command(:redix, ["HGET", hash, "amount"])
+		amount
+	end
+
 	def get_player_miners_expertise(player_miner_id, resource_id) do
 		hash = "player_miner:" <> player_miner_id <> ":expertise"
 		field = resource_id
