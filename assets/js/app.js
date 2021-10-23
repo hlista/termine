@@ -17,31 +17,29 @@ import "phoenix_html"
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import Home from './Components/Home'
 
-class Home extends React.Component {
-	render() {
-		return (
+function App() {
+		return(
 			<div>
-				<h1>Hello React!</h1>
+				<Router>
+					<div>
+						<Route exact path="/" component={Home}/>
+					</div>
+				</Router>
 			</div>
 		)
-	}
 }
 
-
-class App extends React.Component {
-	render() {
-		return(
-			<Router>
-				<div>
-					<Route exact path="/" component={Home}/>
-				</div>
-			</Router>
-		)
-	}
-}
+const client = new ApolloClient({
+	uri: "localhost:4000/graphql/",
+	cache: new InMemoryCache()
+});
 
 ReactDOM.render(
-	<App/>,
+	<ApolloProvider client={client}>
+		<App/>
+	</ApolloProvider>,
 	document.getElementById("termine-react")
 )
