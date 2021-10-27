@@ -15,7 +15,7 @@ defmodule Termine.Distributor do
 	@impl true
 	def init(state) do
 		Impl.initialize_state()
-		schedule_next_node()
+		schedule_next_node_immediately()
 		{:ok, %{}}
 	end
 
@@ -54,6 +54,7 @@ defmodule Termine.Distributor do
 		if (Termine.Worlds.is_node_mining(node_id)) do
 			Termine.Redis.push_mining_node(node_id)
 		end
+		{:noreply, state}
 	end
 
 	defp schedule_next_node_immediately() do

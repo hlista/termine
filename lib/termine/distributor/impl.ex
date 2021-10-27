@@ -37,7 +37,6 @@ defmodule Termine.Distributor.Impl do
 			Enum.each(player_miner_map, fn {player_miner_id, _} ->
 				Redis.increment_player_miners_hits(node_id, player_miner_id, count)
 			end)
-			Redis.release_node_for_operation(node_id, "increment", random_string)
 		end
 	end
 
@@ -58,7 +57,6 @@ defmodule Termine.Distributor.Impl do
 			if (Redis.get_node_amount(node_id) <= 0) do
 				Worlds.complete_state(node_id)
 			end
-			Redis.release_node_for_operation(node_id, "distribute", random_string)
 		end
 	end
 

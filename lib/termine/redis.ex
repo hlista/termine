@@ -32,8 +32,12 @@ defmodule Termine.Redis do
 	def seconds_since_last_increment(node_id) do
 		current_time = :os.system_time(:second)
 		key = node_id <> ":increment:timestamp"
-		{:ok, last_call} = Redix.command(:redix, {"GETSET", key, Integer.to_string(current_time)})
-		current_time - String.to_integer(last_call)
+		{:ok, last_call} = Redix.command(:redix, ["GETSET", key, Integer.to_string(current_time)])
+		if (last_call) do
+			current_time - String.to_integer(last_call)
+		else
+			1
+		end
 	end
 
 	def set_player_miner_to_mining(node_id, miner_id, expertises, inventory_id) do
