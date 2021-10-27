@@ -10,31 +10,27 @@ defmodule Termine.Distributor.Impl do
 				create_cache_structure(node)
 			end
 		end)
-		Enum.reduce(nodes, %{}, fn node, acc -> Map.put(acc, Integer.to_string(node.id), {nil, nil}) end)
+		%{}
 	end
 
 	def create_cache_structure(node) do
 		Redis.set_node_resource_amount(Integer.to_string(node.id), node.current_state.state_type_collectable.resource_id, node.current_state.state_type_collectable.amount)
-		Redis.set_node_to_mining(Integer.to_string(node.id))
-		create_miner_cache_structure(node, node.player_miners, node.current_state.state_type_collectable.resource_id)
+		Redis.push_mining_node(Integer.to_string(node.id))
+		create_miner_cache_structure(node, node.player_miners)
 	end
 
-	def create_miner_cache_structure(node, miners, resource_id) do
+	def create_miner_cache_structure(node, miners) do
 		miners
 		|> Enum.each(fn miner ->
-			Redis.set_player_miners_expertise(Integer.to_string(miner.id), Integer.to_string(resource_id), get_miner_expertise_level(miner, resource_id))
+			Redis.set_all_player_miners_expertises(Integer.to_string(miner.id), miner.expertises)
 			Redis.set_player_miners_inventory_id(Integer.to_string(miner.id), miner.inventory.id)
 			Redis.zero_player_miners_hits(Integer.to_string(node.id), Integer.to_string(miner.id))
 		end)
 	end
 
-	def get_miner_expertise_level(miner, resource_id) do
-		Enum.find_value(miner.expertises, fn x -> if x.resource_id === resource_id, do: x.level end)
-	end
-
 	def increment_node(node_id) do
 		random_string = random_string()
-		{:ok, val} = Redis.get_node_for_operation(node_id, "increment", random_string, "1000")
+		{:ok, val} = Redis.lock_node_for_operation(node_id, "increment", random_string, "1000")
 		if (!is_nil(val)) do
 			count = Redis.seconds_since_last_increment(node_id)
 			player_miner_map = Redis.get_all_player_miners_hits(node_id)
@@ -47,7 +43,7 @@ defmodule Termine.Distributor.Impl do
 
 	def distribute_node(node_id) do
 		random_string = random_string()
-		{:ok, val} = Redis.get_node_for_operation(node_id, "distribute", random_string, "30000")
+		{:ok, val} = Redis.lock_node_for_operation(node_id, "distribute", random_string, "30000")
 		if (!is_nil(val)) do
 			player_miner_map = Redis.get_all_player_miners_hits(node_id)
 			Enum.each(player_miner_map, fn {player_miner_id, hits} ->

@@ -89,7 +89,7 @@ defmodule Termine.Worlds do
 		|> Repo.preload([:state_type_collectable])
 		if (state.type === :mineable or state.type === :attackable) do
 			Redis.set_node_resource_amount(state.node_id, state.state_type_collectable.resource_id, state.state_type_collectable.amount)
-			Redis.set_node_to_mining(state.node_id)
+			Redis.push_mining_node(state.node_id)
 		else
 			Redis.del_node_from_mining(state.node_id)
 		end

@@ -12,17 +12,18 @@ defmodule Termine.Redis do
 
 	def pop_mining_node() do
 		list = "mining"
-		Redix.command(:redix, ["RPOP", list])
+		{:ok, node_id} = Redix.command(:redix, ["RPOP", list])
+		node_id
 	end
 
-	def get_node_for_operation(node_id, operation, random_string, expire) do
+	def lock_node_for_operation(node_id, operation, random_string, expire) do
 		key = node_id <> ":" <> operation <> ":lock"
 		Redix.command(:redix, ["SET", key, random_string, "NX", "PX", expire])
 	end
 
 	def release_node_for_operation(node_id, operation, random_string) do
 		key = node_id <> ":" <> operation <> ":lock"
-		{:ok, val} = Redix.call(:redix, ["GET", key])
+		{:ok, val} = Redix.command(:redix, ["GET", key])
 		if val === random_string do
 			Redix.command(:redix, ["DEL", key])
 		end
@@ -31,7 +32,7 @@ defmodule Termine.Redis do
 	def seconds_since_last_increment(node_id) do
 		current_time = :os.system_time(:second)
 		key = node_id <> ":increment:timestamp"
-		{:ok, last_call} = Redix.call(:redix, {"GETSET", key, Integer.to_string(current_time)})
+		{:ok, last_call} = Redix.command(:redix, {"GETSET", key, Integer.to_string(current_time)})
 		current_time - String.to_integer(last_call)
 	end
 
@@ -69,12 +70,6 @@ defmodule Termine.Redis do
 		hash = "player_miner:" <> player_miner_id
 		field = "inventory_id"
 		Redix.command(:redix, ["HSET", hash, field, inventory_id])
-	end
-
-	def set_player_miners_expertise(player_miner_id, resource_id, expertise_level) do
-		hash = "player_miner:" <> player_miner_id <> ":expertise"
-		field = resource_id
-		Redix.command(:redix, ["HSET", hash, field, expertise_level])
 	end
 
 	def set_all_player_miners_expertises(player_miner_id, expertises) do

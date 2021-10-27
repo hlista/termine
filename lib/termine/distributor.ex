@@ -14,40 +14,50 @@ defmodule Termine.Distributor do
 
 	@impl true
 	def init(state) do
-		state = Impl.initialize_state()
-		Enum.each(state, fn {node_id, _} -> schedule_increment(node_id) end)
-		schedule_distribution()
-		{:ok, state}
+		Impl.initialize_state()
+		schedule_next_node()
+		{:ok, %{}}
 	end
 
 	@impl true
-	def handle_info({:increment, node_id}, state) do
-		task = Task.Supervisor.async_nolink(Termine.TaskSupervisor, fn ->
-			{:incremented, Impl.increment_nodes_miners_hits(node_id)}
-		end)
-
-		{:noreply, state}
-	end
-
-	@impl true
-	def handle_info({ref, {:incremented, node_id}}, state) do
+	def handle_info({ref, {:incremented, _}}, state) do
 		Process.demonitor(ref, [:flush])
-		schedule_increment(node_id)
 		{:noreply, state}
 	end
 
 	@impl true
-	def handle_info(:distribute, state) do
-		schedule_distribution()
-		Impl.distribute()
+	def handle_info({ref, {:distributed, _}}, state) do
+		Process.demonitor(ref, [:flush])
 		{:noreply, state}
 	end
 
-	defp schedule_increment(node_id) do
-		Process.send_after(self(), {:increment, node_id}, 1000)
+	@impl true
+	def handle_info(:next_node_work, state) do
+		node_id = Termine.Redis.pop_mining_node()
+		if (node_id) do
+			Task.Supervisor.async_nolink(Termine.TaskSupervisor, fn ->
+				{:incremented, Impl.increment_node(node_id)}
+			end)
+			Task.Supervisor.async_nolink(Termine.TaskSupervisor, fn ->
+				{:distributed, Impl.distribute_node(node_id)}
+			end)
+			schedule_next_node_immediately()
+			schedule_node_push(node_id)
+		else
+			schedule_next_node()
+		end
+		{:noreply, state}
 	end
 
-	defp schedule_distribution() do
-		Process.send_after(self(), :distribute, 60000)
+	defp schedule_next_node_immediately() do
+		Process.send(self(), :next_node_work)
+	end
+
+	defp schedule_next_node() do
+		Process.send_after(self, :next_node_work, 1000)
+	end
+
+	defp schedule_node_push(node_id) do
+		Process.send_after(self(), {:push_node_to_mining, node_id}, 1000)
 	end
 end
