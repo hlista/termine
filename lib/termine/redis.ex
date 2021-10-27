@@ -1,21 +1,18 @@
 defmodule Termine.Redis do
 
-	def set_node_to_mining(node_id) do
-		hash = "mining"
-		field = node_id
-		Redix.command(:redix, ["HSET", hash, field, 1])
+	def push_mining_node(node_id) do
+		list = "mining"
+		Redix.command(:redix, ["LPUSH", list, node_id])
 	end
 
 	def del_node_from_mining(node_id) do
-		hash = "mining"
-		field = node_id
-		Redix.command(:redix, ["HDEL", hash, field])
+		list = "mining"
+		Redix.command(:redix, ["LREM", list, 0, node_id])
 	end
 
-	def get_all_mining_nodes() do
-		hash = "mining"
-		{:ok, list} = Redix.command(:redix, ["HGETALL", hash])
-		convert_redis_output_list_to_map(list)
+	def pop_mining_node() do
+		list = "mining"
+		Redix.command(:redix, ["RPOP", list])
 	end
 
 	def get_node_for_operation(node_id, operation, random_string, expire) do

@@ -32,7 +32,7 @@ defmodule Termine.Distributor.Impl do
 		Enum.find_value(miner.expertises, fn x -> if x.resource_id === resource_id, do: x.level end)
 	end
 
-	def increment_nodes_miners_hits(node_id) do
+	def increment_node(node_id) do
 		random_string = random_string()
 		{:ok, val} = Redis.get_node_for_operation(node_id, "increment", random_string, "1000")
 		if (!is_nil(val)) do
@@ -45,9 +45,10 @@ defmodule Termine.Distributor.Impl do
 		end
 	end
 
-	def distribute() do
-		nodes = Redis.get_all_mining_nodes()
-		Enum.each(nodes, fn {node_id, _} ->
+	def distribute_node(node_id) do
+		random_string = random_string()
+		{:ok, val} = Redis.get_node_for_operation(node_id, "distribute", random_string, "30000")
+		if (!is_nil(val)) do
 			player_miner_map = Redis.get_all_player_miners_hits(node_id)
 			Enum.each(player_miner_map, fn {player_miner_id, hits} ->
 				resource_id = Redis.get_nodes_resource_id(node_id)
@@ -61,7 +62,8 @@ defmodule Termine.Distributor.Impl do
 			if (Redis.get_node_amount(node_id) <= 0) do
 				Worlds.complete_state(node_id)
 			end
-		end)
+			Redis.release_node_for_operation(node_id, "distribute", random_string)
+		end
 	end
 
 	def calculate_reward(expertise_level, trials) do
