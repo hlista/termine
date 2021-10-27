@@ -18,6 +18,26 @@ defmodule Termine.Redis do
 		convert_redis_output_list_to_map(list)
 	end
 
+	def get_node_for_operation(node_id, operation, random_string, expire) do
+		key = node_id <> ":" <> operation <> ":lock"
+		Redix.command(:redix, ["SET", key, random_string, "NX", "PX", expire])
+	end
+
+	def release_node_for_operation(node_id, operation, random_string) do
+		key = node_id <> ":" <> operation <> ":lock"
+		{:ok, val} = Redix.call(:redix, ["GET", key])
+		if val === random_string do
+			Redix.command(:redix, ["DEL", key])
+		end
+	end
+
+	def seconds_since_last_increment(node_id) do
+		current_time = :os.system_time(:second)
+		key = node_id <> ":increment:timestamp"
+		{:ok, last_call} = Redix.call(:redix, {"GETSET", key, Integer.to_string(current_time)})
+		current_time - String.to_integer(last_call)
+	end
+
 	def set_player_miner_to_mining(node_id, miner_id, expertises, inventory_id) do
 		set_all_player_miners_expertises(miner_id, expertises)
 		set_player_miners_inventory_id(miner_id, inventory_id)
@@ -36,10 +56,10 @@ defmodule Termine.Redis do
 		Redix.command(:redix, ["HSET", hash, field, 0])
 	end
 
-	def increment_player_miners_hits(node_id, miner_id) do
+	def increment_player_miners_hits(node_id, miner_id, count) do
 		hash = "node:" <> node_id <> ":hits"
 		field = miner_id
-		Redix.command(:redix, ["HINCRBY", hash, field, 1])
+		Redix.command(:redix, ["HINCRBY", hash, field, count])
 	end
 
 	def get_all_player_miners_hits(node_id) do

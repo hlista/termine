@@ -10,7 +10,7 @@ defmodule Termine.Distributor.Impl do
 				create_cache_structure(node)
 			end
 		end)
-		%{}
+		Enum.reduce(nodes, %{}, fn node, acc -> Map.put(acc, Integer.to_string(node.id), {nil, nil}) end)
 	end
 
 	def create_cache_structure(node) do
@@ -32,14 +32,17 @@ defmodule Termine.Distributor.Impl do
 		Enum.find_value(miner.expertises, fn x -> if x.resource_id === resource_id, do: x.level end)
 	end
 
-	def increment_nodes_miners_hits() do
-		nodes = Redis.get_all_mining_nodes()
-		Enum.each(nodes, fn {node_id, _} ->
+	def increment_nodes_miners_hits(node_id) do
+		random_string = random_string()
+		{:ok, val} = Redis.get_node_for_operation(node_id, "increment", random_string, "1000")
+		if (!is_nil(val)) do
+			count = Redis.seconds_since_last_increment(node_id)
 			player_miner_map = Redis.get_all_player_miners_hits(node_id)
 			Enum.each(player_miner_map, fn {player_miner_id, _} ->
-				Redis.increment_player_miners_hits(node_id, player_miner_id)
+				Redis.increment_player_miners_hits(node_id, player_miner_id, count)
 			end)
-		end)
+			Redis.release_node_for_operation(node_id, "increment", random_string)
+		end
 	end
 
 	def distribute() do
@@ -85,6 +88,10 @@ defmodule Termine.Distributor.Impl do
 	def calculate_successes(n, rand, accumulated_probability, probability, numerator, denominator, trials) do
 		new_probability = probability * (numerator * (trials - n)) / ((denominator - numerator) * (n + 1))
 		calculate_successes(n + 1, rand, accumulated_probability + new_probability, new_probability, numerator, denominator, trials)
+	end
+
+	def random_string() do
+		:crypto.strong_rand_bytes(10) |> Base.url_encode64 |> binary_part(0, 10)
 	end
 
 end
