@@ -49,12 +49,19 @@ defmodule Termine.Distributor do
 		{:noreply, state}
 	end
 
+	@impl true
+	def handle_info({:push_node_to_mining, node_id}, state) do
+		if (Termine.Worlds.is_node_mining(node_id)) do
+			Termine.Redis.push_mining_node(node_id)
+		end
+	end
+
 	defp schedule_next_node_immediately() do
-		Process.send(self(), :next_node_work)
+		send(self(), :next_node_work)
 	end
 
 	defp schedule_next_node() do
-		Process.send_after(self, :next_node_work, 1000)
+		Process.send_after(self(), :next_node_work, 1000)
 	end
 
 	defp schedule_node_push(node_id) do

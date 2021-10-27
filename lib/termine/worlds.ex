@@ -95,6 +95,13 @@ defmodule Termine.Worlds do
 		end
 	end
 
+	def is_node_mining(node_id) do
+		node = Node
+		|> Repo.get(node_id)
+		|> Repo.preload([:current_state])
+		(node.current_state.type === :mineable or node.current_state.type === :attackable)
+	end
+
 	def unblock_nodes(state_id) do
 		Enum.each(Actions.all(Termine.StateTypes.BlockUntil, %{until_state_id: state_id}), fn block_until_state -> 
 			Enum.each(Actions.all(Node, %{current_state_id: block_until_state.state_id}), fn blocking_node -> 
