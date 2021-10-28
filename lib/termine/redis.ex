@@ -32,7 +32,7 @@ defmodule Termine.Redis do
 	def seconds_since_last_increment(node_id) do
 		current_time = :os.system_time(:second)
 		key = node_id <> ":increment:timestamp"
-		{:ok, last_call} = Redix.command(:redix, ["GETSET", key, Integer.to_string(current_time)])
+		{:ok, last_call} = Redix.command(:redix, ["SET", key, Integer.to_string(current_time), "EX", "30", "GET"])
 		if (last_call) do
 			current_time - String.to_integer(last_call)
 		else
