@@ -98,7 +98,11 @@ defmodule Termine.Redis do
 	def get_node_amount(node_id) do
 		hash = "node:" <> node_id
 		{:ok, amount} = Redix.command(:redix, ["HGET", hash, "amount"])
-		amount
+		if (amount) do
+			amount
+		else
+			0
+		end
 	end
 
 	def get_player_miners_expertise(player_miner_id, resource_id) do

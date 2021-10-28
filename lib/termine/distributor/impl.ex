@@ -54,9 +54,14 @@ defmodule Termine.Distributor.Impl do
 				Redis.zero_player_miners_hits(node_id, player_miner_id)
 				Redis.decrement_node_amount(node_id, reward)
 			end)
-			if (Redis.get_node_amount(node_id) <= 0) do
-				Worlds.complete_state(node_id)
-			end
+		end
+	end
+
+	def increment_state(node_id) do
+		random_string = random_string()
+		{:ok, val} = Redis.lock_node_for_operation(node_id, "increment_state", random_string, "1000")
+		if (!is_nil(val)) do
+			Termine.Worlds.complete_state(node_id)
 		end
 	end
 
