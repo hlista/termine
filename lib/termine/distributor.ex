@@ -21,7 +21,7 @@ defmodule Termine.Distributor do
 
 	@impl true
 	def handle_cast({:increment_state, node_id}, state) do
-		schedule_state_increment(node_id)
+		Impl.increment_state(node_id)
 		{:noreply, state}
 	end
 
@@ -34,13 +34,6 @@ defmodule Termine.Distributor do
 	@impl true
 	def handle_info({ref, {:distributed, _}}, state) do
 		Process.demonitor(ref, [:flush])
-		{:noreply, state}
-	end
-
-	@impl true
-	def handle_info({ref, {:state_incremented, node_id}}, state) do
-		Process.demonitor(ref, [:flush])
-		schedule_node_push(node_id)
 		{:noreply, state}
 	end
 
@@ -68,23 +61,13 @@ defmodule Termine.Distributor do
 		is_node_out_of_resource = (Redis.get_node_amount(node_id) <= 0)
 		cond do
 			is_node_mining and is_node_out_of_resource ->
-				schedule_state_increment(node_id)
+				Impl.increment_state(node_id)
+				Impl.initialize_node_for_mining(node_id)
+				Termine.Redis.push_mining_node(node_id)
 			is_node_mining ->
 				Termine.Redis.push_mining_node(node_id)
 		end
 		{:noreply, state}
-	end
-
-	@impl true
-	def handle_info({:state_increment, node_id}, state) do
-		Task.supervisor.async_nolink(Termine.TaskSupervisor, fn ->
-			{:state_incremented, Impl.increment_state(node_id)}
-		end)
-		{:noreply, state}
-	end
-
-	defp schedule_state_increment(node_id) do
-		send(self(), {:state_increment, node_id})
 	end
 
 	defp schedule_next_node_immediately() do
