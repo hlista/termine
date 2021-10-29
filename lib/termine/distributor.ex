@@ -13,6 +13,12 @@ defmodule Termine.Distributor do
 	end
 
 	@impl true
+	def handle_cast({:increment_state, node_id}, state) do
+		schedule_state_increment(node_id)
+		{:noreply, state}
+	end
+
+	@impl true
 	def init(state) do
 		Impl.initialize_state()
 		schedule_next_node_immediately()
@@ -55,7 +61,7 @@ defmodule Termine.Distributor do
 		is_node_out_of_resource = (Redis.get_node_amount(node_id) <= 0)
 		cond do
 			is_node_mining and is_node_out_of_resource ->
-				schedule_state_increment()
+				schedule_state_increment(node_id)
 			is_node_mining ->
 				Termine.Redis.push_mining_node(node_id)
 		end

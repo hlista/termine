@@ -47,7 +47,7 @@ defmodule Termine.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:phx_gen_auth, "~> 0.7.0"},
-      {:ecto_shorts, "~> 0.1.7"},
+      {:ecto_shorts, "~> 1.0.0"},
       {:absinthe, "~> 1.5"},
       {:absinthe_plug, "~> 1.5"},
       {:absinthe_phoenix, "~> 2.0"},
