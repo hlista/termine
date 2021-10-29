@@ -61,7 +61,18 @@ defmodule Termine.Distributor.Impl do
 		random_string = random_string()
 		{:ok, val} = Redis.lock_node_for_operation(node_id, "increment_state", random_string, "1000")
 		if (!is_nil(val)) do
-			Termine.Worlds.complete_state(node_id)
+			Termine.StateHandler.complete_state(node_id)
+			initialize_node_for_mining(node_id)
+		end
+	end
+
+	def initialize_node_for_mining(node_id) do
+		{:ok, %{current_state: state}} = Worlds.find_node(%{id: node_id, preload: [current_state: [:state_type_collectable]]})
+		if (state.type === :mineable or state.type === :attackable) do
+			Redis.set_node_resource_amount(node_id, state.state_type_collectable.resource_id, state.state_type_collectable.amount)
+			Redis.push_mining_node(state.node_id)
+		else
+			Redis.del_node_from_mining(state.node_id)
 		end
 	end
 

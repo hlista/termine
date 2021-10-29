@@ -51,16 +51,6 @@ defmodule Termine.StateHandler do
 		end)
 	end
 
-	def update_redis(state_id) do
-		{:ok, state} = Worlds.find_state(%{id: state_id, preload: [:state_type_collectable]})
-		if (state.type === :mineable or state.type === :attackable) do
-			Redis.set_node_resource_amount(state.node_id, state.state_type_collectable.resource_id, state.state_type_collectable.amount)
-			Redis.push_mining_node(state.node_id)
-		else
-			Redis.del_node_from_mining(state.node_id)
-		end
-	end
-
 	def is_node_mining(node_id) do
 		node = Worlds.find_node(%{id: node_id, preload: [:current_state]})
 		(node.current_state.type === :mineable or node.current_state.type === :attackable)

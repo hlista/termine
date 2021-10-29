@@ -13,16 +13,16 @@ defmodule Termine.Distributor do
 	end
 
 	@impl true
-	def handle_cast({:increment_state, node_id}, state) do
-		schedule_state_increment(node_id)
-		{:noreply, state}
-	end
-
-	@impl true
 	def init(state) do
 		Impl.initialize_state()
 		schedule_next_node_immediately()
 		{:ok, %{}}
+	end
+
+	@impl true
+	def handle_cast({:increment_state, node_id}, state) do
+		schedule_state_increment(node_id)
+		{:noreply, state}
 	end
 
 	@impl true
@@ -34,6 +34,13 @@ defmodule Termine.Distributor do
 	@impl true
 	def handle_info({ref, {:distributed, _}}, state) do
 		Process.demonitor(ref, [:flush])
+		{:noreply, state}
+	end
+
+	@impl true
+	def handle_info({ref, {:state_incremented, node_id}}, state) do
+		Process.demonitor(ref, [:flush])
+		schedule_node_push(node_id)
 		{:noreply, state}
 	end
 
