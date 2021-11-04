@@ -5,6 +5,15 @@ defmodule Termine.Application do
 
   use Application
 
+  defp poolboy_config do
+    [
+      name: {:local, :worker},
+      worker_module: Termine.RedisWorker,
+      size: 5,
+      max_overflow: 2
+    ]
+  end
+
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
@@ -16,7 +25,7 @@ defmodule Termine.Application do
       # Start the Endpoint (http/https)
       TermineWeb.Endpoint,
       {Task.Supervisor, name: Termine.TaskSupervisor},
-      {Redix, name: :redix}
+      :poolboy.child_spec(:worker, poolboy_config())
       # Start a worker by calling: Termine.Worker.start_link(arg)
       # {Termine.Worker, arg}
     ]

@@ -52,7 +52,8 @@ defmodule Termine.MixProject do
       {:absinthe_plug, "~> 1.5"},
       {:absinthe_phoenix, "~> 2.0"},
       {:dataloader, "~> 1.0"},
-      {:redix, "~> 1.1"}
+      {:redix, "~> 1.1"},
+      {:poolboy, "~> 1.5.1"}
     ]
   end
 

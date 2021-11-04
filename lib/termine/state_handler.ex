@@ -52,7 +52,7 @@ defmodule Termine.StateHandler do
   end
 
   def is_node_mining(node_id) do
-    node = Worlds.find_node(%{id: node_id, preload: [:current_state]})
+    {:ok, node} = Worlds.find_node(%{id: node_id, preload: [:current_state]})
     (node.current_state.type === :mineable or node.current_state.type === :attackable)
   end
 end
