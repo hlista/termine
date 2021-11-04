@@ -1,13 +1,13 @@
 defmodule Termine.AbsintheUserContext do
-	@behaviour Plug
+  @behaviour Plug
 
-	import Plug.Conn
+  import Plug.Conn
 
-	alias Termine.Accounts
+  alias Termine.Accounts
 
-	def init(opts), do: opts
+  def init(opts), do: opts
 
-	def call(conn, _) do
-		Absinthe.Plug.put_options(conn, context: %{current_user: conn.assigns.current_user})
-	end
+  def call(conn, _) do
+    Absinthe.Plug.put_options(conn, context: %{current_user: conn.assigns.current_user})
+  end
 end

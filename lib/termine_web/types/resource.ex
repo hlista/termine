@@ -1,8 +1,8 @@
 defmodule TermineWeb.Types.Resource do
-	use Absinthe.Schema.Notation
+  use Absinthe.Schema.Notation
 
-	object :resource do
-		field :name, :string
-		field :id, :id
-	end
+  object :resource do
+    field :name, :string
+    field :id, :id
+  end
 end

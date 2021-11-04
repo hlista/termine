@@ -1,19 +1,19 @@
 defmodule TermineWeb.Schema.Mutations.Player do
-	use Absinthe.Schema.Notation
+  use Absinthe.Schema.Notation
 
-	alias TermineWeb.Resolvers
+  alias TermineWeb.Resolvers
 
-	object :player_mutations do
-		field :create_player, :player do
-			arg :username, non_null(:string)
+  object :player_mutations do
+    field :create_player, :player do
+      arg :username, non_null(:string)
 
-			resolve &Resolvers.Player.create/2
-		end
+      resolve &Resolvers.Player.create/2
+    end
 
-		field :move_player, :player do
-			arg :hash, non_null(:string)
+    field :move_player, :player do
+      arg :hash, non_null(:string)
 
-			resolve &Resolvers.Player.move/2
-		end
-	end
+      resolve &Resolvers.Player.move/2
+    end
+  end
 end
