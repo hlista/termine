@@ -12,7 +12,7 @@ defmodule TermineWeb.Schema.Mutations.State do
       arg :state_type_loop_until, :input_state_type_loop_until
       arg :state_type_loop, :input_state_type_loop
       arg :state_type_block_until, :input_state_type_block_until
-      #middleware TermineWeb.AdminAuthentication
+      middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.State.create/2
     end
 
@@ -20,7 +20,7 @@ defmodule TermineWeb.Schema.Mutations.State do
       arg :id, non_null(:id)
       arg :inspect_text, :string
       arg :node_id, :id
-      #middleware TermineWeb.AdminAuthentication
+      middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.State.update/2
     end
 
@@ -31,7 +31,7 @@ defmodule TermineWeb.Schema.Mutations.State do
       arg :state_type_loop_until, :input_state_type_loop_until
       arg :state_type_loop, :input_state_type_loop
       arg :state_type_block_until, :input_state_type_block_until
-      #middleware TermineWeb.AdminAuthentication
+      middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.State.update_type/2
     end
   end

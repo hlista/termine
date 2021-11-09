@@ -7,7 +7,7 @@ defmodule TermineWeb.Schema.Queries.State do
     field :states, list_of(:state) do
       arg :type, :state_type
       arg :resource_id, :id
-      #middleware TermineWeb.AdminAuthentication
+      middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.State.all/2
     end
   end

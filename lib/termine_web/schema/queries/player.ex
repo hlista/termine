@@ -8,7 +8,7 @@ defmodule TermineWeb.Schema.Queries.Player do
       arg :username, :string
       arg :location_id, :id
       arg :user_id, :id
-      #middleware TermineWeb.AdminAuthentication
+      middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.Player.all/2
     end
   end

@@ -7,7 +7,7 @@ defmodule TermineWeb.Schema.Mutations.Miner do
     field :create_miner, :miner do
       arg :name, non_null(:string)
       arg :description, non_null(:string)
-      #middleware TermineWeb.AdminAuthentication
+      middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.Miner.create/2
     end
 

@@ -8,7 +8,7 @@ defmodule TermineWeb.Schema.Mutations.Node do
       arg :name, non_null(:string)
       arg :intro_text, non_null(:string)
       arg :current_state_id, :id
-      #middleware TermineWeb.AdminAuthentication
+      middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.Node.create/2
     end
 
@@ -18,7 +18,7 @@ defmodule TermineWeb.Schema.Mutations.Node do
       arg :name, :string
       arg :current_state_id, :id
       arg :state_id_array, list_of(:id)
-      #middleware TermineWeb.AdminAuthentication
+      middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.Node.update/2
     end
   end

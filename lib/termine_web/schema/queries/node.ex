@@ -6,7 +6,7 @@ defmodule TermineWeb.Schema.Queries.Node do
   object :node_queries do
     field :nodes, list_of(:node) do
       arg :hash, :string
-      #middleware TermineWeb.AdminAuthentication
+      middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.Node.all/2
     end
   end
