@@ -15,5 +15,10 @@ defmodule TermineWeb.Schema.Mutations.Miner do
       arg :id, non_null(:id)
       resolve &Resolvers.Miner.send/2
     end
+
+    field :retreat_player_miner, :player_miner do
+      arg :id, non_null(:id)
+      resolve &Resolvers.Miner.retreat/2
+    end
   end
 end

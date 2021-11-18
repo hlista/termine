@@ -8,7 +8,7 @@ defmodule Termine.Characters do
   end
 
   def create_player(params) do
-    starting_zone = Repo.one!(Termine.Worlds.Node)
+    [starting_zone | _] = Repo.all(Termine.Worlds.Node)
     params = Map.put(params, :location_id, starting_zone.id)
     Actions.create(Player, params)
   end

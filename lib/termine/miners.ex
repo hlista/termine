@@ -9,8 +9,8 @@ defmodule Termine.Miners do
   end
 
   def create_starter_player_miner(%{player_id: id}) do
-    miner = Repo.one!(Miner)
-    Actions.create(PlayerMiner, %{player_id: id, miner_id: miner.id})
+    [starter_miner | _] = Repo.all(Miner)
+    Actions.create(PlayerMiner, %{player_id: id, miner_id: starter_miner.id})
   end
 
   def create_expertises(%{player_miner_id: id}) do
@@ -30,6 +30,8 @@ defmodule Termine.Miners do
         {:error, "This node is not mineable at the moment"}
       is_nil(player_miner) ->
         {:error, "You do not own that miner"}
+      !is_nil(player_miner.location_id) ->
+        {:error, "miner is somewhere else"}
       true ->
         Redis.set_player_miner_to_mining(Integer.to_string(current_user.player.location_id), Integer.to_string(player_miner.id), player_miner.expertises, Integer.to_string(current_user.player.inventory.id))
         Actions.update(PlayerMiner, player_miner, location_id: current_user.player.location_id)
