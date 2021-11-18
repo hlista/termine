@@ -9,8 +9,8 @@ mix phx.server
 ```
 
 ## start mining
-Register a Dummy account at localhost:4000
-navigate to localhost:4000/graphiql
+- Register a Dummy account at localhost:4000
+- navigate to localhost:4000/graphiql
 ### Run the following commands
 ```
 mutation{
