@@ -1,14 +1,94 @@
 # Termine
 
-Text, resource collection, node based mmo with an emphasize on story telling and collaboration
+## up and running
+```
+mix ecto.create
+mix ecto.migrate
+mix run priv/repo/seeds.exs
+mix phx.server
+```
 
-Node System:
+## start mining
+Register a Dummy account at localhost:4000
+navigate to localhost:4000/graphiql
+### Run the following commands
+```
+mutation{
+  createPlayer(username: "Your Username"){
+    id
+    username
+    location{
+      hash
+      name
+      introText
+    }
+    inventory{
+      inventoryItems{
+        resource{
+          name
+        }
+        amount
+      }
+    }
+    playerMiners{
+      id
+    }
+  }
+}
+```
+#### Take the id from playerMiners and run
+```
+mutation{
+  sendPlayerMiner(id: OUTPUT ID){
+    id
+    location{
+      id
+      hash
+      name
+      introText
+    }
+  }
+}
+```
+#### Check your inventory and updates on the node with
+```
+query{
+  self{
+    username
+    inventory{
+      inventoryItems{
+        resource{
+          name
+        }
+        amount
+      }
+    }
+    location{
+      name
+      introText
+      currentState{
+        inspectText
+      }
+    }
+  }
+}
+```
 
-  * Nodes will have a unique identification hash along with a title describing the location
-  * Players will be able to visit the node by typing "goto <hash #>"
-  * Nodes will have an inspect text that describes what is currently happening at the node
-  * Nodes will be handing out a resource that players can send their miners in to mine
-  * Once a node runs out of a resource it progresses to the next plot point and inspect text changes
-  * Nodes have neighbors that players can get a list of and visit
-  * Once you know the hash of a node you can goto it from any node on the map
- 
+#### Repeat the previous steps (log out and register a new account) in order to get more miners on the node
+
+### Check on all the Players inventory with
+```
+query {
+  players {
+    username
+    inventory{
+      inventoryItems{
+        resource{
+          name
+        }
+        amount
+      }
+    }
+  }
+}
+```
