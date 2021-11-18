@@ -104,6 +104,10 @@ mutation{
       currentState{
         inspectText
       }
+      neighborNodes{
+        hash
+        name
+      }
     }
   }
  }
