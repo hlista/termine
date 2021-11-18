@@ -7,6 +7,7 @@ mix ecto.migrate
 mix run priv/repo/seeds.exs
 mix phx.server
 ```
+Redis should also be running on localhost:6379
 
 ## start mining
 - Register a Dummy account at localhost:4000
