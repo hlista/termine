@@ -4,7 +4,7 @@ defmodule Termine.Characters.Inventory do
 
   schema "inventories" do
     belongs_to :player, Termine.Characters.Player
-
+    has_many :inventory_items, Termine.Characters.InventoryItem
   end
 
   def create_changeset(params) do

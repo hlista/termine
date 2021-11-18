@@ -8,6 +8,8 @@ defmodule Termine.Characters do
   end
 
   def create_player(params) do
+    starting_zone = Repo.one!(Termine.Worlds.Node)
+    params = Map.put(params, :location_id, starting_zone.id)
     Actions.create(Player, params)
   end
 
@@ -17,6 +19,11 @@ defmodule Termine.Characters do
 
   def create_node_history(params) do
     Actions.create(PlayerNodeHistory, params)
+  end
+
+  def current_player(user) do
+    user = Repo.preload(user, :player)
+    {:ok, user.player}
   end
 
   def move_player(%{hash: hash, user: user}) do

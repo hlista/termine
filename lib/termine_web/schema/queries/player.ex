@@ -11,5 +11,9 @@ defmodule TermineWeb.Schema.Queries.Player do
       middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.Player.all/2
     end
+
+    field :self, :player do
+      resolve &Resolvers.Player.self/2
+    end
   end
 end

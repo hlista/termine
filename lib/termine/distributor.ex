@@ -58,7 +58,7 @@ defmodule Termine.Distributor do
   @impl true
   def handle_info({:push_node_to_mining, node_id}, state) do
     is_node_mining = Termine.StateHandler.is_node_mining(node_id)
-    is_node_out_of_resource = (Termine.Redis.get_node_amount(node_id) <= 0)
+    is_node_out_of_resource = (String.to_integer(Termine.Redis.get_node_amount(node_id)) <= 0)
     cond do
       is_node_mining and is_node_out_of_resource ->
         Impl.increment_state(node_id)

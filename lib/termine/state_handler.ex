@@ -4,7 +4,6 @@ defmodule Termine.StateHandler do
   def complete_state(node_id) do
     {:ok, node} = Worlds.find_node(%{id: node_id})
     Worlds.update_state(node.current_state_id, %{has_been_completed: true})
-    unblock_nodes(node.current_state_id)
     increment_state(node)
   end
 
@@ -15,24 +14,24 @@ defmodule Termine.StateHandler do
     next_state_id = Enum.fetch!(state_id_array, index + 1)
 
     {:ok, next_state} = Worlds.find_state(%{id: next_state_id, preload: [state_type_loop_until: [:until_state], state_type_loop: [], state_type_collectable: [], state_type_block_until: [:until_state]]})
-    next_state_id = determine_next_state(next_state, Enum.fetch!(state_id_array, index + 2))
+    next_state_id = determine_next_state(next_state, state_id_array, index + 2)
 
-    Actions.update(Node, node.id, %{current_state_id: next_state_id})
+    Worlds.update_node(node.id, %{current_state_id: next_state_id})
   end
 
-  def determine_next_state(state, skip_to_state_id) do
+  def determine_next_state(state, state_id_array, skip_to_index) do
     case state.type do
       :loop ->
         state.state_type_loop.go_to_state_id
       :loop_until ->
         if (state.state_type_loop_until.until_state.has_been_completed) do
-          skip_to_state_id
+          Enum.fetch!(state_id_array, skip_to_index)
         else
           state.state_type_loop_until.go_to_state_id
         end
       :block_until ->
         if (state.state_type_block_until.until_state.has_been_completed) do
-          skip_to_state_id
+          Enum.fetch!(state_id_array, skip_to_index)
         else
           state.id
         end

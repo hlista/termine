@@ -25,7 +25,8 @@ defmodule Termine.Application do
       # Start the Endpoint (http/https)
       TermineWeb.Endpoint,
       {Task.Supervisor, name: Termine.TaskSupervisor},
-      :poolboy.child_spec(:worker, poolboy_config())
+      :poolboy.child_spec(:worker, poolboy_config()),
+      Termine.Distributor
       # Start a worker by calling: Termine.Worker.start_link(arg)
       # {Termine.Worker, arg}
     ]

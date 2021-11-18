@@ -10,6 +10,8 @@ defmodule TermineWeb.Resolvers.Player do
     case created_player do
       {:ok, player} ->
         Characters.create_inventory(%{player_id: player.id})
+        {:ok, player_miner} = Termine.Miners.create_starter_player_miner(%{player_id: player.id})
+        Termine.Miners.create_expertises(%{player_miner_id: player_miner.id})
         {:ok, player}
       {:error, error} ->
         {:error, error}
@@ -20,5 +22,9 @@ defmodule TermineWeb.Resolvers.Player do
     params
     |> Map.put(:user, user)
     |> Characters.move_player()
+  end
+
+  def self(_, %{context: %{current_user: user}}) do
+    Characters.current_player(user)
   end
 end
