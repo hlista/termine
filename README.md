@@ -42,7 +42,7 @@ mutation{
 #### Take the id from playerMiners and run
 ```
 mutation{
-  sendPlayerMiner(id: OUTPUT ID){
+  sendPlayerMiner(id: PLAYER MINER ID){
     id
     location{
       id
@@ -57,7 +57,7 @@ mutation{
 #### Retreat your playerMiner from where it is mining at with
 ```
 mutation{
-  retreatPlayerMiner(id: 1){
+  retreatPlayerMiner(id: PLAYER MINER ID){
     id
   }
 }
