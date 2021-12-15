@@ -42,7 +42,7 @@ mutation{
 #### Take the id from playerMiners and run
 ```
 mutation{
-  sendPlayerMiner(id: OUTPUT ID){
+  sendPlayerMiner(id: PLAYER MINER ID){
     id
     location{
       id
@@ -53,7 +53,17 @@ mutation{
   }
 }
 ```
-#### Check your inventory and updates on the node with
+
+#### Retreat your playerMiner from where it is mining at with
+```
+mutation{
+  retreatPlayerMiner(id: PLAYER MINER ID){
+    id
+  }
+}
+```
+
+#### Check your inventory, state updates at your location, and neighboring nodes with
 ```
 query{
   self{
@@ -72,10 +82,37 @@ query{
       currentState{
         inspectText
       }
+      neighborNodes{
+        hash
+        name
+      }
     }
   }
 }
 ```
+
+#### Move your player with 
+```
+mutation{
+  movePlayer(hash: NEIGHBORING NODE HASH){
+    id
+    username
+    location{
+      hash
+      name
+      introText
+      currentState{
+        inspectText
+      }
+      neighborNodes{
+        hash
+        name
+      }
+    }
+  }
+ }
+```
+
 
 #### Repeat the previous steps (log out and register a new account) in order to get more miners on the node
 
