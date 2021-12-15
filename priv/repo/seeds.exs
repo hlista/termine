@@ -11,13 +11,10 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Termine.Repo
-alias Termine.Worlds.Node
-alias Termine.Worlds.State
-alias Termine.StateTypes.Collectable
-alias Termine.StateTypes.Loop
+alias Termine.Worlds.{Node, State, Neighbor}
+alias Termine.StateTypes.{Collectable, Loop, BlockUntil}
 alias Termine.Items.Resource
 alias Termine.Miners.Miner
-alias Termine.Worlds.Neighbor
 
 node1 = Repo.insert! %Node{
   hash: "A8F34D",
@@ -87,13 +84,24 @@ node2 = Repo.insert! %Node{
 
 state4 = Repo.insert! %State{
   inspect_text: "All you can see are hills",
+  type: :block_until,
+  has_been_completed: false,
+  node_id: node2.id
+}
+
+Repo.insert! %BlockUntil{
+  state_id: state4.id,
+  until_state_id: state3.id
+}
+
+state41 = Repo.insert! %State{
+  inspect_text: "You cleared the deeprock mines and have progressed The Hills of Everport to the next state",
   type: :block,
   has_been_completed: false,
   node_id: node2.id
-
 }
 
-Repo.update! Ecto.Changeset.change(node2, %{current_state_id: state4.id, state_id_array: [state4.id]})
+Repo.update! Ecto.Changeset.change(node2, %{current_state_id: state4.id, state_id_array: [state4.id, state41.id]})
 
 Repo.insert! %Neighbor{
   parent_node_id: node1.id,

@@ -1,9 +1,11 @@
 defmodule Termine.StateHandler do
   alias Termine.Worlds
+  alias Termine.StateTypes
 
   def complete_state(node_id) do
     {:ok, node} = Worlds.find_node(%{id: node_id})
     Worlds.update_state(node.current_state_id, %{has_been_completed: true})
+    unblock_nodes(node.current_state_id)
     increment_state(node)
   end
 
@@ -41,12 +43,11 @@ defmodule Termine.StateHandler do
   end
 
   def unblock_nodes(state_id) do
-    {:ok, block_until_states} = Worlds.list_states(%{until_state_id: state_id})
-    Enum.each(block_until_states, fn block_until_state ->
-      {:ok, blocking_nodes} = Worlds.list_nodes(%{current_state_id: block_until_state.state_id})
-      Enum.each(blocking_nodes, fn blocking_node ->
-        GenServer.cast(Termine.Distributor, {:increment_state, blocking_node.id})
-      end)
+    {:ok, block_until_state_types} = StateTypes.list_block_until(%{until_state_id: state_id})
+    state_ids = Enum.map(block_until_state_types, fn x -> x.state_id end)
+    {:ok, blocked_nodes} = Worlds.list_nodes_on_states(state_ids)
+    Enum.each(blocked_nodes, fn blocking_node ->
+      GenServer.cast(Termine.Distributor, {:increment_state, Integer.to_string(blocking_node.id)})
     end)
   end
 

@@ -1,6 +1,7 @@
 defmodule Termine.Worlds.Node do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   schema "nodes" do
     field :hash, :string
@@ -28,5 +29,10 @@ defmodule Termine.Worlds.Node do
     |> validate_required([:name, :hash, :intro_text])
     |> unique_constraint(:name)
     |> unique_constraint(:hash)
+  end
+
+  def nodes_on_states_query(query \\ Termine.Worlds.Node, state_ids) do
+    query
+    |> where([n], n.current_state_id in ^state_ids)
   end
 end

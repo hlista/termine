@@ -18,4 +18,12 @@ defmodule Termine.StateTypes do
   def create_loop_until(params) do
     Actions.create(LoopUntil, params)
   end
+
+  def list_block_until(params) do
+    {:ok, Actions.all(BlockUntil, params)}
+  end
+
+  def list_loop_until(params) do
+    {:ok, Actions.all(LoopUntil, params)}
+  end
 end

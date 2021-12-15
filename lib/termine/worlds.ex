@@ -10,6 +10,10 @@ defmodule Termine.Worlds do
     {:ok, Actions.all(Node, params)}
   end
 
+  def list_nodes_on_states(state_ids) do
+    {:ok, Repo.all(Node.nodes_on_states_query(state_ids))}
+  end
+
   def list_states(params) do
     {:ok, Actions.all(State, params)}
   end
