@@ -1,5 +1,5 @@
 <div class="flex justify-end">
-  <ul class="grid grid-cols-1 justify-items-end">
+  <ul class="flex flex-col">
     <%= if @current_user do %>
       <li><%= @current_user.email %></li>
       <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %></li>

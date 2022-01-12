@@ -11,7 +11,8 @@
   <body>
     <header>
       <section class="container">
-        <nav role="navigation">
+        <nav class="bg-stone-500 flex text-center" role="navigation">
+          <p class="text-6xl basis-3/4 text-white font-['Open_Sans']"> TERMINE </p>
           <%= render "_user_menu.html", assigns %>
         </nav>
       </section>
