@@ -16,19 +16,17 @@ import "phoenix_html"
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import Home from './Components/Home'
 
 function App() {
 		return(
-			<div>
-				<Router>
-					<div>
-						<Route exact path="/" component={Home}/>
-					</div>
-				</Router>
-			</div>
+			<Router>
+				<Routes>
+					<Route exact path="/" element={<Home />}/>
+				</Routes>
+			</Router>
 		)
 }
 

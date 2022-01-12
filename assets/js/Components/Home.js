@@ -19,7 +19,7 @@ export default function Home() {
 
 	return data.players.map(({ id, username }) => (
 		<div key={id}>
-			<p>{username}</p>
+			<h1 className="font-bold">{username}</h1>
 		</div>
 		));
 }
