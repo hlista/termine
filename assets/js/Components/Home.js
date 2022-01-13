@@ -10,16 +10,33 @@ const PLAYER_QUERY = gql`
 	}
 `;
 
+const SELF_QUERY = gql`
+	query Self {
+		self{
+			location{
+				name
+				introText
+				currentState{
+					inspectText
+				}
+			}
+		}
+	}
+`;
+
 export default function Home() {
 
-	const { data, loading, error } = useQuery(PLAYER_QUERY);
+	const { data, loading, error } = useQuery(SELF_QUERY);
 
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>{error.message}</p>;
 
-	return data.players.map(({ id, username }) => (
-		<div key={id}>
-			<h1 className="font-bold">{username}</h1>
+	return(
+		<div className="flex flex-col">
+			<p className="text-center text-4xl"> {data.self.location.name} </p>
+			<p className="text-center"> {data.self.location.introText} </p>
+			<p className="text-center text-2xl"> {data.self.location.currentState.inspectText} </p>
+
 		</div>
-		));
+		);
 }

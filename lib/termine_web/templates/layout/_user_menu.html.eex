@@ -1,4 +1,4 @@
-<div class="flex justify-end">
+<div class="justify-end">
   <ul class="flex flex-col">
     <%= if @current_user do %>
       <li><%= @current_user.email %></li>
