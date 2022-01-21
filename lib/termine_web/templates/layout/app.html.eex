@@ -17,7 +17,7 @@
         <%= render "_user_menu.html", assigns %>
       </div>
     </header>
-    <main role="main" class="container">
+    <main role="main">
       <%= @inner_content %>
     </main>
   </body>
