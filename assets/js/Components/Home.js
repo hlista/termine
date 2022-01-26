@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
-import Actionbar from "./Actionbar.js"
 import Location from "./Location.js"
 import Inventory from "./Inventory.js"
 import Minerbar from "./Minerbar.js"
