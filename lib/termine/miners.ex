@@ -4,6 +4,10 @@ defmodule Termine.Miners do
   alias EctoShorts.Actions
   alias Termine.Redis
 
+  def list_player_miners_currently_mining(params \\ %{}) do
+    Actions.all(PlayerMiner.player_miners_with_location_query(), params)
+  end
+
   def create_miner(params) do
     Actions.create(Miner, params)
   end

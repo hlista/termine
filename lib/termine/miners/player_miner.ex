@@ -1,6 +1,7 @@
 defmodule Termine.Miners.PlayerMiner do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   schema "player_miners" do
     belongs_to :miner, Termine.Miners.Miner
@@ -20,5 +21,10 @@ defmodule Termine.Miners.PlayerMiner do
     player_miner
     |> cast(attrs, [:miner_id, :player_id, :location_id])
     |> validate_required([:miner_id, :player_id])
+  end
+
+  def player_miners_with_location_query(query \\ Termine.Miners.PlayerMiner) do
+    query
+    |> where([p], not is_nil(p.location_id))
   end
 end
