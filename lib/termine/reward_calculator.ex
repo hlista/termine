@@ -1,5 +1,6 @@
 defmodule Termine.RewardCalculator do
   alias Termine.Characters
+  alias Termine.NodeResourceCache
 
   def calculate_reward(trials) do
     binomial(1, 40, trials)

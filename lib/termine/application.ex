@@ -26,6 +26,12 @@ defmodule Termine.Application do
       TermineWeb.Endpoint,
       {Task.Supervisor, name: Termine.TaskSupervisor},
       :poolboy.child_spec(:worker, poolboy_config()),
+      {Termine.NodeResourceCache,
+        [:public, :named_table, :compressed, :set, read_concurrency: true, write_concurrency: true]
+      },
+      {Termine.PlayerMinerTimestampCache,
+        [:public, :named_table, :compressed, :set, read_concurrency: true, write_concurrency: true]
+      },
       #Termine.Distributor
       # Start a worker by calling: Termine.Worker.start_link(arg)
       # {Termine.Worker, arg}

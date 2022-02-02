@@ -2,11 +2,8 @@ defmodule Termine.StateHandler do
   alias Termine.Worlds
   alias Termine.StateTypes
 
-  def complete_state(node_id) do
-    {:ok, node} = Worlds.find_node(%{id: node_id})
+  def complete_state(node) do
     Worlds.update_state(node.current_state_id, %{has_been_completed: true})
-    unblock_nodes(node.current_state_id)
-    increment_state(node)
   end
 
   def increment_state(node) do
@@ -49,6 +46,16 @@ defmodule Termine.StateHandler do
     Enum.each(blocked_nodes, fn blocking_node ->
       GenServer.cast(Termine.Distributor, {:increment_state, Integer.to_string(blocking_node.id)})
     end)
+  end
+
+  def set_node_to_mining(node_id) do
+    {:ok, node} = Worlds.find_node(%{preload: [current_state: [state_type_collectable: []]]})
+    if node.current_state.type === :mineable do
+      Termine.NodeResourceCache.set_node_to_mining(node.id, node.current_state.state_type_collectable.amount, node.current_state.state_type_collectable.resource_id)
+    end
+    if node.current_state.type === :attackable do
+      Termine.NodeResourceCache.set_node_to_mining(node.id, node.current_state.state_type_collectable.amount, 0)
+    end
   end
 
   def is_node_mining(node_id) do
