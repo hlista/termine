@@ -4,14 +4,10 @@ defmodule Termine.Worlds.State do
 
   schema "states" do
     field :inspect_text, :string
-    field :type, Ecto.Enum, values: [:mineable, :attackable, :donatable, :block, :block_until, :loop, :loop_until]
-    field :has_been_completed, :boolean
+    field :type, Ecto.Enum, values: [:mineable, :attackable, :donatable, :block, :camp]
     belongs_to :node, Termine.Worlds.Node
 
     has_one :state_type_collectable, Termine.StateTypes.Collectable
-    has_one :state_type_block_until, Termine.StateTypes.BlockUntil
-    has_one :state_type_loop, Termine.StateTypes.Loop
-    has_one :state_type_loop_until, Termine.StateTypes.LoopUntil
 
   end
 
@@ -22,11 +18,8 @@ defmodule Termine.Worlds.State do
   @doc false
   def changeset(state, attrs) do
     state
-    |> cast(attrs, [:inspect_text, :type, :node_id, :has_been_completed])
+    |> cast(attrs, [:inspect_text, :type, :node_id])
     |> validate_required([:inspect_text, :type])
     |> cast_assoc(:state_type_collectable) 
-    |> cast_assoc(:state_type_block_until)
-    |> cast_assoc(:state_type_loop)
-    |> cast_assoc(:state_type_loop_until)
   end
 end

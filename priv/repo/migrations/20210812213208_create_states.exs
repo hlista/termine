@@ -2,14 +2,13 @@ defmodule Termine.Repo.Migrations.CreateStates do
   use Ecto.Migration
 
   def change do
-    create_query = "CREATE TYPE state_type AS ENUM ('mineable', 'attackable', 'donatable', 'block', 'block_until', 'loop', 'loop_until')"
+    create_query = "CREATE TYPE state_type AS ENUM ('mineable', 'attackable', 'donatable', 'block', 'camp')"
     drop_query = "DROP TYPE state_type"
     execute(create_query, drop_query)
 
     create table(:states) do
       add :inspect_text, :text
       add :type, :state_type
-      add :has_been_completed, :boolean, default: false
     end
   end
 end
