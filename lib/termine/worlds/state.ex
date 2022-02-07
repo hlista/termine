@@ -8,6 +8,9 @@ defmodule Termine.Worlds.State do
     belongs_to :node, Termine.Worlds.Node
 
     has_one :state_type_collectable, Termine.StateTypes.Collectable
+    
+    has_many :state_checks, Termine.Checks.StateCheck
+    has_many :checks, through: [:state_checks, :check]
 
   end
 

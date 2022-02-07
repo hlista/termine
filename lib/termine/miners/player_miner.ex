@@ -10,6 +10,7 @@ defmodule Termine.Miners.PlayerMiner do
 
     has_one :inventory, through: [:player, :inventory]
 
+    timestamps()
   end
 
   def create_changeset(params) do
