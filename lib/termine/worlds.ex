@@ -4,7 +4,7 @@ defmodule Termine.Worlds do
   alias EctoShorts.Actions
   alias Termine.Redis
 
-  @state_types [:state_type_loop_until, :state_type_loop, :state_type_collectable, :state_type_block_until]
+  @state_types [:state_type_collectable]
 
   def list_nodes(params) do
     {:ok, Actions.all(Node, params)}

@@ -1,6 +1,6 @@
 defmodule Termine.Miners do
   alias Termine.Repo
-  alias Termine.Miners.{Miner, PlayerMiner, Expertise}
+  alias Termine.Miners.{Miner, PlayerMiner}
   alias EctoShorts.Actions
   alias Termine.Redis
 
@@ -17,15 +17,8 @@ defmodule Termine.Miners do
     Actions.create(PlayerMiner, %{player_id: id, miner_id: starter_miner.id})
   end
 
-  def create_expertises(%{player_miner_id: id}) do
-    resources = Repo.all(Termine.Items.Resource)
-    Enum.each(resources, fn resource -> 
-      Actions.create(Expertise, %{resource_id: resource.id, player_miner_id: id, level: 1})
-    end)
-  end
-
   def send_player_miner(current_user, params) do
-    current_user = Repo.preload(current_user, [player: [location: [:current_state], player_miners: [:expertises], inventory: []]])
+    current_user = Repo.preload(current_user, [player: [location: [:current_state], player_miners: [], inventory: []]])
     state_type = current_user.player.location.current_state.type
     player_miner = Enum.find(current_user.player.player_miners, fn player_miner -> player_miner.id === params.id end)
 

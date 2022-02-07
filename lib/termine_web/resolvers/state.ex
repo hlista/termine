@@ -2,7 +2,7 @@ defmodule TermineWeb.Resolvers.State do
   alias Termine.Worlds
   alias Termine.StateTypes
 
-  @state_types [:state_type_loop_until, :state_type_loop, :state_type_collectable, :state_type_block_until]
+  @state_types [:state_type_collectable]
   @ids [:node_id, :go_to_state_id, :until_state_id, :resource_id]
 
   def all(params, _), do: Worlds.list_states(params)

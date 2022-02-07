@@ -1,6 +1,6 @@
 defmodule Termine.Characters do
   alias Termine.Repo
-  alias Termine.Characters.{Player, Miner, Inventory, InventoryItem, PlayerNodeHistory}
+  alias Termine.Characters.{Player, Miner, Inventory, InventoryItem}
   alias EctoShorts.Actions
 
   def list_players(params) do
@@ -17,23 +17,18 @@ defmodule Termine.Characters do
     Actions.create(Inventory, params)
   end
 
-  def create_node_history(params) do
-    Actions.create(PlayerNodeHistory, params)
-  end
-
   def current_player(user) do
     user = Repo.preload(user, :player)
     {:ok, user.player}
   end
 
   def move_player(%{hash: hash, user: user}) do
-    user = Repo.preload(user, [player: [location: [:neighbor_nodes], history_nodes: []]])
-    valid_nodes = user.player.location.neighbor_nodes ++ user.player.history_nodes
+    user = Repo.preload(user, [player: [location: [:neighbor_nodes]]])
+    valid_nodes = user.player.location.neighbor_nodes
     case find_valid_node(hash, valid_nodes) do
       nil ->
         {:error, "Cannot travel to that node"}
       node ->
-        create_node_history(%{player_id: user.player.id, node_id: node.id})
         Actions.update(Player, user.player.id, %{location_id: node.id})
     end
 

@@ -9,9 +9,6 @@ defmodule TermineWeb.Schema.Mutations.State do
       arg :type, non_null(:state_type)
       arg :node_id, non_null(:id)
       arg :state_type_collectable, :input_state_type_collectable
-      arg :state_type_loop_until, :input_state_type_loop_until
-      arg :state_type_loop, :input_state_type_loop
-      arg :state_type_block_until, :input_state_type_block_until
       middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.State.create/2
     end
@@ -28,9 +25,6 @@ defmodule TermineWeb.Schema.Mutations.State do
       arg :state_id, non_null(:id)
       arg :type, :state_type
       arg :state_type_collectable, :input_state_type_collectable
-      arg :state_type_loop_until, :input_state_type_loop_until
-      arg :state_type_loop, :input_state_type_loop
-      arg :state_type_block_until, :input_state_type_block_until
       middleware TermineWeb.AdminAuthentication
       resolve &Resolvers.State.update_type/2
     end

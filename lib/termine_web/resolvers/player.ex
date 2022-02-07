@@ -11,7 +11,6 @@ defmodule TermineWeb.Resolvers.Player do
       {:ok, player} ->
         Characters.create_inventory(%{player_id: player.id})
         {:ok, player_miner} = Termine.Miners.create_starter_player_miner(%{player_id: player.id})
-        Termine.Miners.create_expertises(%{player_miner_id: player_miner.id})
         {:ok, player}
       {:error, error} ->
         {:error, error}
