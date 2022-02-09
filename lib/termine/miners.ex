@@ -4,8 +4,18 @@ defmodule Termine.Miners do
   alias EctoShorts.Actions
   alias Termine.Redis
 
-  def list_player_miners_currently_mining(params \\ %{}) do
-    {:ok, Actions.all(PlayerMiner.player_miners_with_location_query(), params)}
+  def get_player_miners_for_mining(limit) do
+    Repo.transaction(fn ->
+      player_miners = Actions.all(PlayerMiner.get_player_miners_lock_query(limit), preload: [:inventory])
+      ids = Enum.map(player_miners, fn pm -> pm.id end)
+      Repo.update_all(PlayerMiner.player_miners_query(ids), set: [pending: false])
+      player_miners
+    end)
+  end
+
+  def player_miners_finished_mining(player_miners, timestamp) do
+    ids = Enum.map(player_miners, fn pm -> pm.id end)
+    Repo.update_all(PlayerMiner.player_miners_query(ids), set: [pending: true, last_time_mined: timestamp])
   end
 
   def create_miner(params) do
@@ -31,7 +41,7 @@ defmodule Termine.Miners do
         {:error, "miner is somewhere else"}
       true ->
         #Redis.set_player_miner_to_mining(Integer.to_string(current_user.player.location_id), Integer.to_string(player_miner.id), player_miner.expertises, Integer.to_string(current_user.player.inventory.id))
-        Actions.update(PlayerMiner, player_miner, location_id: current_user.player.location_id)
+        Actions.update(PlayerMiner, player_miner, %{location_id: current_user.player.location_id, last_time_mined: DateTime.utc_now()})
     end
   end
 

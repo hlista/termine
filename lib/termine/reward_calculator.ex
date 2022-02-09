@@ -3,7 +3,7 @@ defmodule Termine.RewardCalculator do
   alias Termine.NodeResourceCache
 
   def calculate_reward(trials) do
-    binomial(1, 40, trials)
+    binomial(1, 100, trials)
   end
 
   def binomial(numerator, denominator, trials) do

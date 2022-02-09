@@ -8,26 +8,26 @@ defmodule Termine.PlayerMinerProducer do
 
   def init(_opts) do
     schedule_refresh()
-    {:producer, {0, 0}}
+    {:producer, 0}
   end
 
-  def handle_info(:refresh, {offset, pending}) do
+  def handle_info(:refresh, pending) do
     schedule_refresh()
     if (pending > 0) do
-      dispatch_events(0, pending)
+      dispatch_events(pending)
     else
-      {:noreply, [], {offset, pending}}
+      {:noreply, [], pending}
     end
   end
 
-  def handle_demand(demand, {offset, pending}) do
-    dispatch_events(offset, pending + demand)
+  def handle_demand(demand, pending) do
+    dispatch_events(pending + demand)
   end
 
-  defp dispatch_events(offset, demand) do
-    {:ok, events} = Miners.list_player_miners_currently_mining(%{offset: offset, limit: demand, preload: [:inventory]})
+  defp dispatch_events(demand) do
+    {:ok, events} = Miners.get_player_miners_for_mining(demand)
     size = Enum.count(events)
-    {:noreply, events, {offset + size, demand - size}}
+    {:noreply, events, demand - size}
   end
 
   defp schedule_refresh() do

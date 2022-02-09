@@ -15,6 +15,10 @@ alias Termine.Worlds.{Node, State, Neighbor}
 alias Termine.StateTypes.{Collectable}
 alias Termine.Items.Resource
 alias Termine.Miners.Miner
+alias Termine.Accounts
+alias Termine.Characters.Player
+alias Termine.Characters.Inventory
+alias Termine.Miners.PlayerMiner
 
 node1 = Repo.insert! %Node{
   hash: "A8F34D",
@@ -56,11 +60,6 @@ Repo.insert! %Collectable{
 }
 
 Repo.update! Ecto.Changeset.change(node1, %{current_state_id: state1.id, state_id_array: [state1.id, state2.id]})
-
-miner = Repo.insert! %Miner{
-  name: "Willace",
-  description: "Willace has been with your family for generations"
-}
 
 node2 = Repo.insert! %Node{
   hash: "EF84ED",
@@ -135,3 +134,26 @@ Repo.insert! %Neighbor{
   parent_node_id: node2.id,
   child_node_id: node3.id
 }
+
+miner = Repo.insert! %Miner{
+  name: "Willace",
+  description: "You met Willace in the stone tavern inn and paid for his lodging. He hasn't left your side since"
+}
+
+users = Enum.map(1..100, fn x ->
+  email_address = Integer.to_string(x) <> "@" <> Integer.to_string(x)
+  password = "111111111111"
+  {:ok, user} = Accounts.register_user(%{email: email_address, password: password})
+  player = Repo.insert! %Player{
+    user_id: user.id,
+    location_id: node1.id,
+    username: Integer.to_string(x)
+  }
+  Repo.insert! %Inventory {
+    player_id: player.id
+  }
+  Repo.insert! %PlayerMiner {
+    player_id: player.id,
+    miner_id: miner.id
+  }
+end)

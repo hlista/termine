@@ -32,6 +32,8 @@ defmodule Termine.Application do
       {Termine.PlayerMinerTimestampCache,
         [:public, :named_table, :compressed, :set, read_concurrency: true, write_concurrency: true]
       },
+      {Termine.PlayerMinerProducer, 0},
+      {Termine.PlayerMinerProducerConsumerCalculateReward, []}
       #Termine.Distributor
       # Start a worker by calling: Termine.Worker.start_link(arg)
       # {Termine.Worker, arg}

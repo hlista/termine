@@ -7,7 +7,8 @@ defmodule Termine.Repo.Migrations.CreatePlayerMiners do
       add :player_id, references(:players, on_delete: :nothing)
       add :location_id, references(:nodes, on_delete: :nothing)
 
-      timestamps()
+      add :last_time_mined, :utc_datetime
+      add :pending, :boolean, default: true
     end
 
     create index(:player_miners, [:miner_id])
