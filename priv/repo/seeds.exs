@@ -12,7 +12,7 @@
 
 alias Termine.Repo
 alias Termine.Worlds.{Node, State, Neighbor}
-alias Termine.StateTypes.{Collectable, Loop, BlockUntil}
+alias Termine.StateTypes.{Collectable}
 alias Termine.Items.Resource
 alias Termine.Miners.Miner
 
@@ -25,7 +25,6 @@ node1 = Repo.insert! %Node{
 state1 = Repo.insert! %State{
   inspect_text: "Inside the mines you find a deposit of copper ore",
   type: :mineable,
-  has_been_completed: false,
   node_id: node1.id
 
 }
@@ -33,14 +32,6 @@ state1 = Repo.insert! %State{
 state2 = Repo.insert! %State{
   inspect_text: "With the copper ore depleted, you move further into the mines and find a human sized spider",
   type: :attackable,
-  has_been_completed: false,
-  node_id: node1.id
-}
-
-state3 = Repo.insert! %State{
-  inspect_text: "After defeating the spider you find yourself back at the entrance",
-  type: :loop,
-  has_been_completed: false,
   node_id: node1.id
 }
 
@@ -64,12 +55,7 @@ Repo.insert! %Collectable{
   resource_id: spider.id
 }
 
-Repo.insert! %Loop{
-  state_id: state3.id,
-  go_to_state_id: state1.id
-}
-
-Repo.update! Ecto.Changeset.change(node1, %{current_state_id: state1.id, state_id_array: [state1.id, state2.id, state3.id]})
+Repo.update! Ecto.Changeset.change(node1, %{current_state_id: state1.id, state_id_array: [state1.id, state2.id]})
 
 miner = Repo.insert! %Miner{
   name: "Willace",
@@ -84,24 +70,12 @@ node2 = Repo.insert! %Node{
 
 state4 = Repo.insert! %State{
   inspect_text: "All you can see are hills",
-  type: :block_until,
-  has_been_completed: false,
-  node_id: node2.id
-}
-
-Repo.insert! %BlockUntil{
-  state_id: state4.id,
-  until_state_id: state3.id
-}
-
-state41 = Repo.insert! %State{
-  inspect_text: "You cleared the deeprock mines and have progressed The Hills of Everport to the next state",
   type: :block,
-  has_been_completed: false,
   node_id: node2.id
 }
 
-Repo.update! Ecto.Changeset.change(node2, %{current_state_id: state4.id, state_id_array: [state4.id, state41.id]})
+
+Repo.update! Ecto.Changeset.change(node2, %{current_state_id: state4.id, state_id_array: [state4.id]})
 
 Repo.insert! %Neighbor{
   parent_node_id: node1.id,
@@ -122,7 +96,6 @@ node3 = Repo.insert! %Node{
 state5 = Repo.insert! %State{
   inspect_text: "You make your way into the mines and find it empty of the usual company miners. You look around and find a deposit of copper ore",
   type: :mineable,
-  has_been_completed: false,
   node_id: node3.id
 
 }
@@ -136,7 +109,6 @@ Repo.insert! %Collectable{
 state6 = Repo.insert! %State{
   inspect_text: "As the morning progresses more and more company miners enter into the mines and begin mining the copper",
   type: :mineable,
-  has_been_completed: false,
   node_id: node3.id
 }
 
@@ -149,7 +121,6 @@ Repo.insert! %Collectable{
 state7 = Repo.insert! %State{
   inspect_text: "At mid day the mines are full of company miners and it is hard to find a spot to mine copper",
   type: :block,
-  has_been_completed: false,
   node_id: node3.id
 }
 

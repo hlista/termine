@@ -25,7 +25,7 @@ defmodule Termine.PlayerMinerProducer do
   end
 
   defp dispatch_events(offset, demand) do
-    {:ok, events} = Miners.list_player_miners_currently_mining(%{offset: offset, limit: demand, preload: :inventory})
+    {:ok, events} = Miners.list_player_miners_currently_mining(%{offset: offset, limit: demand, preload: [:inventory]})
     size = Enum.count(events)
     {:noreply, events, {offset + size, demand - size}}
   end

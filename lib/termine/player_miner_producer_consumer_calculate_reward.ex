@@ -9,7 +9,7 @@ defmodule Termine.PlayerMinerProducerConsumerCalculateReward do
   end
 
   def init(:ok) do
-    {:producer_consumer, %{}, subscribe_to: [{Termine.PlayerMinerProducer, max_demand: 20}]}
+    {:consumer, %{}, subscribe_to: [{Termine.PlayerMinerProducer, max_demand: 20}]}
   end
 
   def handle_events(events, _from, state) do
@@ -18,15 +18,19 @@ defmodule Termine.PlayerMinerProducerConsumerCalculateReward do
       {player_miner.inventory.id, player_miner.location_id, NodeResourceCache.get_resource_id(player_miner.location_id), time - PlayerMinerTimestampCache.get_and_set(player_miner.id, time)}
     end)
 
-    total_weight = Enum.reduce(events, 0, fn {_, _, _, weight}, acc -> acc + weight end)
+    {weighted_array, total_weight} = RewardCalculator.generate_weights(events)
+
     reward = RewardCalculator.calculate_reward(total_weight)
 
-    events = RewardCalculator.take_random_weighted_sample(events, reward)
+    IO.inspect weighted_array
+    IO.inspect reward
+
+    events = RewardCalculator.take_random_weighted_sample(weighted_array, reward, total_weight)
 
     RewardCalculator.reward_players(events)
 
     nodes_out_of_resouces = RewardCalculator.update_nodes_resource_amount(events)
 
-    {:noreply, nodes_out_of_resouces, state}
+    {:noreply, [], state}
   end
 end

@@ -30,7 +30,7 @@ defmodule Termine.Miners do
       !is_nil(player_miner.location_id) ->
         {:error, "miner is somewhere else"}
       true ->
-        Redis.set_player_miner_to_mining(Integer.to_string(current_user.player.location_id), Integer.to_string(player_miner.id), player_miner.expertises, Integer.to_string(current_user.player.inventory.id))
+        #Redis.set_player_miner_to_mining(Integer.to_string(current_user.player.location_id), Integer.to_string(player_miner.id), player_miner.expertises, Integer.to_string(current_user.player.inventory.id))
         Actions.update(PlayerMiner, player_miner, location_id: current_user.player.location_id)
     end
   end
@@ -42,7 +42,7 @@ defmodule Termine.Miners do
       is_nil(player_miner) ->
         {:error, "You do not own that miner"}
       true ->
-        Redis.delete_player_miners_hits(Integer.to_string(current_user.player.location_id), Integer.to_string(player_miner.id))
+        #Redis.delete_player_miners_hits(Integer.to_string(current_user.player.location_id), Integer.to_string(player_miner.id))
         Actions.update(PlayerMiner, player_miner, location_id: nil)
     end
   end
